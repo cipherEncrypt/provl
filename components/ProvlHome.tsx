@@ -1,0 +1,80 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+
+import { RunForm } from "./RunForm";
+import { RunLoading } from "./RunLoading";
+
+export function ProvlHome() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [runFinished, setRunFinished] = useState(false);
+
+  async function runTask(task: string, url: string) {
+    setLoading(true);
+    setError(null);
+    setRunFinished(false);
+
+    try {
+      const res = await fetch("/api/kane/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ task, url: url || undefined }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok && !data.done && data.error) {
+        setError(data.error);
+        return;
+      }
+      if (!res.ok && !data.summary && !data.honestStop) {
+        setError("Run failed before Provl got a result.");
+        return;
+      }
+      setRunFinished(true);
+    } catch {
+      setError("Could not reach the server. Is npm run dev running?");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="flex w-full flex-col gap-8">
+      <header className="space-y-2 text-center sm:text-left">
+        <p className="text-sm uppercase tracking-wide text-emerald-500/90">Provl</p>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Proof for web chores
+        </h1>
+        <p className="text-slate-400">
+          Describe a task in plain English. Provl runs it in a real browser and
+          returns a pass or fail you can trust.
+        </p>
+      </header>
+
+      <RunForm disabled={loading} onSubmit={runTask} />
+
+      {loading && <RunLoading />}
+
+      {error && (
+        <p className="rounded-xl border border-red-900/50 bg-red-950/40 px-4 py-3 text-sm text-red-200">
+          {error}
+        </p>
+      )}
+
+      {runFinished && !loading && !error && (
+        <p className="text-center text-sm text-slate-400" role="status">
+          Run complete — result card will appear on the next build step.
+        </p>
+      )}
+
+      <p className="text-center text-sm text-slate-500">
+        Sandbox cancel demo:{" "}
+        <Link href="/demo/subscription" className="text-emerald-400 underline-offset-2 hover:underline">
+          /demo/subscription
+        </Link>
+      </p>
+    </div>
+  );
+}
