@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { runKaneWithRetry } from "@/lib/kane/runWithRetry";
+import { saveProof } from "@/lib/proof/store";
 
 export const maxDuration = 600;
 
@@ -21,6 +22,23 @@ export async function POST(req: Request) {
 
   const result = await runKaneWithRetry({ task, url });
 
+  const proof = await saveProof({
+    task,
+    url,
+    done: result.done,
+    exitCode: result.exitCode,
+    replayUrl: result.replayUrl,
+    oneLiner: result.oneLiner,
+    summary: result.summary,
+    finalState: result.finalState,
+    duration: result.duration,
+    creditsConsumed: result.creditsConsumed,
+    honestStop: result.honestStop,
+    attempts: result.attempts,
+  });
+
+  const proofUrl = `/proof/${proof.id}`;
+
   return NextResponse.json(
     {
       done: result.done,
@@ -31,10 +49,10 @@ export async function POST(req: Request) {
       finalState: result.finalState,
       duration: result.duration,
       creditsConsumed: result.creditsConsumed,
-      sessionDir: result.sessionDir,
-      evidencePackPath: result.evidencePackPath,
       honestStop: result.honestStop,
       attempts: result.attempts,
+      proofId: proof.id,
+      proofUrl,
     },
     { status: result.done ? 200 : 422 },
   );
