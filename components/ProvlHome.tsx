@@ -3,18 +3,21 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import type { RunApiResponse } from "@/lib/api-types";
+
+import { ResultCard } from "./ResultCard";
 import { RunForm } from "./RunForm";
 import { RunLoading } from "./RunLoading";
 
 export function ProvlHome() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [runFinished, setRunFinished] = useState(false);
+  const [result, setResult] = useState<RunApiResponse | null>(null);
 
   async function runTask(task: string, url: string) {
     setLoading(true);
     setError(null);
-    setRunFinished(false);
+    setResult(null);
 
     try {
       const res = await fetch("/api/kane/run", {
@@ -23,16 +26,16 @@ export function ProvlHome() {
         body: JSON.stringify({ task, url: url || undefined }),
       });
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok && !data.done && data.error) {
+      const data = (await res.json().catch(() => ({}))) as RunApiResponse;
+      if (data.error && !data.summary && !data.honestStop) {
         setError(data.error);
         return;
       }
-      if (!res.ok && !data.summary && !data.honestStop) {
-        setError("Run failed before Provl got a result.");
+      if (!data.summary && !data.honestStop && !data.oneLiner) {
+        setError("Run finished without a readable result from Kane.");
         return;
       }
-      setRunFinished(true);
+      setResult(data);
     } catch {
       setError("Could not reach the server. Is npm run dev running?");
     } finally {
@@ -63,10 +66,12 @@ export function ProvlHome() {
         </p>
       )}
 
-      {runFinished && !loading && !error && (
-        <p className="text-center text-sm text-slate-400" role="status">
-          Run complete — result card will appear on the next build step.
-        </p>
+      {result && !loading && (
+        <ResultCard
+          result={result}
+          proofUrl={result.proofUrl ?? null}
+          showShareHint={Boolean(result.proofUrl)}
+        />
       )}
 
       <p className="text-center text-sm text-slate-500">
