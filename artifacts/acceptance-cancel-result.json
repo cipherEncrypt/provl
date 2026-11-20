@@ -1,0 +1,13 @@
+{
+  "done": true,
+  "exitCode": 0,
+  "replayUrl": "https://test-manager.lambdatest.com/projects/01M7TXECJ03ZB1GD52MS7AE39S/test-cases/01M7V837540JWGZJWN06JQ9CFW/dashboard/share/US_PX50N29YB1BOLJOBN54PDS19Q5ID6WLYRH65PGFGRRN2V7X6P04OLPGBOXO011HL?type=summary&agentView=true&fqdn=summary-page",
+  "oneLiner": "canceled the subscription on the subscription page",
+  "summary": "You asked to cancel the subscription and confirm the cancellation.\nClicked “Cancel subscription” and confirmed by selecting “Yes, cancel” in the dialog.\nThe subscription was canceled successfully, and the page displayed “Subscription canceled.”",
+  "finalState": {
+    "url": "http://localhost:3000/demo/subscription",
+    "subscription_canceled_message_visible": "true"
+  },
+  "attempts": 1,
+  "honestStop": null
+}
