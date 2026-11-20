@@ -8,6 +8,7 @@
     "start": "next start",
     "kane:run": "tsx scripts/run-task.ts",
     "phase-a:parse-fixtures": "tsx scripts/verify-parser-fixtures.ts",
+    "phase-a:retry-policy": "tsx scripts/verify-retry-policy.ts",
     "phase-a:acceptance": "tsx scripts/acceptance-cancel.ts"
   },
   "dependencies": {

@@ -1,4 +1,5 @@
 import { buildProvlResult } from "./parseNdjson";
+import { shouldRetryKaneRun } from "./retryPolicy";
 import { runKane } from "./runKane";
 import type { ProvlRunResult, RunKaneOptions } from "./types";
 
@@ -40,8 +41,7 @@ export async function runKaneWithRetry(
 
     if (result.done) return result;
 
-    // Exit 2 = did not start — retrying the same task rarely helps without config changes
-    if (exitCode === 2 || !result.runEnd) {
+    if (!shouldRetryKaneRun(exitCode, result.runEnd)) {
       return result;
     }
 
