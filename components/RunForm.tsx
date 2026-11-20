@@ -2,10 +2,21 @@
 
 type RunFormProps = {
   disabled?: boolean;
+  task: string;
+  url: string;
+  onTaskChange: (value: string) => void;
+  onUrlChange: (value: string) => void;
   onSubmit: (task: string, url: string) => void;
 };
 
-export function RunForm({ disabled, onSubmit }: RunFormProps) {
+export function RunForm({
+  disabled,
+  task,
+  url,
+  onTaskChange,
+  onUrlChange,
+  onSubmit,
+}: RunFormProps) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -27,6 +38,8 @@ export function RunForm({ disabled, onSubmit }: RunFormProps) {
           required
           rows={4}
           disabled={disabled}
+          value={task}
+          onChange={(e) => onTaskChange(e.target.value)}
           placeholder='e.g. Click "Cancel subscription", confirm "Yes, cancel", then verify "Subscription canceled" is shown.'
           className="min-h-[7rem] w-full resize-y rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 disabled:opacity-60"
         />
@@ -40,6 +53,8 @@ export function RunForm({ disabled, onSubmit }: RunFormProps) {
           name="url"
           type="url"
           disabled={disabled}
+          value={url}
+          onChange={(e) => onUrlChange(e.target.value)}
           placeholder="http://localhost:3000/demo/subscription"
           className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600 disabled:opacity-60"
         />

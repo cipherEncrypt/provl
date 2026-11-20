@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import type { RunApiResponse } from "@/lib/api-types";
 
+import { DemoPresets } from "./DemoPresets";
 import { ResultCard } from "./ResultCard";
 import { RunForm } from "./RunForm";
 import { RunLoading } from "./RunLoading";
@@ -13,8 +14,12 @@ export function ProvlHome() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RunApiResponse | null>(null);
+  const [task, setTask] = useState("");
+  const [url, setUrl] = useState("");
 
-  async function runTask(task: string, url: string) {
+  async function runTask(runTaskText: string, runUrl: string) {
+    setTask(runTaskText);
+    setUrl(runUrl);
     setLoading(true);
     setError(null);
     setResult(null);
@@ -23,7 +28,7 @@ export function ProvlHome() {
       const res = await fetch("/api/kane/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task, url: url || undefined }),
+        body: JSON.stringify({ task: runTaskText, url: runUrl || undefined }),
       });
 
       const data = (await res.json().catch(() => ({}))) as RunApiResponse;
@@ -56,7 +61,21 @@ export function ProvlHome() {
         </p>
       </header>
 
-      <RunForm disabled={loading} onSubmit={runTask} />
+      <DemoPresets
+        disabled={loading}
+        onRunPreset={(t, u) => {
+          void runTask(t, u);
+        }}
+      />
+
+      <RunForm
+        disabled={loading}
+        task={task}
+        url={url}
+        onTaskChange={setTask}
+        onUrlChange={setUrl}
+        onSubmit={runTask}
+      />
 
       {loading && <RunLoading />}
 
