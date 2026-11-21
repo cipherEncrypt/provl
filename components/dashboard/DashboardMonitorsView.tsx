@@ -3,8 +3,16 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import {
+  taskNeedsStoredSecrets,
+  taskSuggestsLogin,
+} from "@/lib/run/loginHints";
 import type { WatchLastStatus, WatchSchedule } from "@/lib/watches/types";
 
+import {
+  RunSecretsEditor,
+  type SecretRow,
+} from "../RunSecretsEditor";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
 type WatchRow = {
@@ -41,6 +49,8 @@ export function DashboardMonitorsView() {
   const [formUrl, setFormUrl] = useState("http://localhost:3000/demo/subscription");
   const [formSchedule, setFormSchedule] = useState<WatchSchedule>("daily");
   const [formEmail, setFormEmail] = useState("");
+  const [secretRows, setSecretRows] = useState<SecretRow[]>([]);
+  const [needsLoginToggle, setNeedsLoginToggle] = useState(false);
   const [creating, setCreating] = useState(false);
   const [runningId, setRunningId] = useState<string | null>(null);
   const [runNotice, setRunNotice] = useState<string | null>(null);
@@ -63,6 +73,11 @@ export function DashboardMonitorsView() {
     void loadWatches();
   }, [loadWatches]);
 
+  const secretsVisible =
+    taskSuggestsLogin(formTask) ||
+    needsLoginToggle ||
+    taskNeedsStoredSecrets(formTask);
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     setCreating(true);
@@ -76,6 +91,9 @@ export function DashboardMonitorsView() {
           url: formUrl.trim() || undefined,
           schedule: formSchedule,
           alertEmail: formEmail.trim(),
+          secrets: secretRows
+            .map((r) => ({ key: r.key.trim(), value: r.value }))
+            .filter((r) => r.key && r.value),
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -162,7 +180,11 @@ export function DashboardMonitorsView() {
         fails.
       </p>
       <p className="mt-3 rounded-card border border-steel-line bg-mist/80 px-4 py-3 text-sm text-steel">
-        Scheduled tasks don&apos;t support logins yet.
+        Login flows are supported: use{" "}
+        <code className="text-ink">{`{{username}}`}</code> and{" "}
+        <code className="text-ink">{`{{password}}`}</code> in the task and add
+        matching secrets below. Secrets are encrypted and only sent to Kane at
+        run time.
       </p>
 
       <form
@@ -220,6 +242,23 @@ export function DashboardMonitorsView() {
             />
           </label>
         </div>
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-steel">
+          <input
+            type="checkbox"
+            disabled={creating}
+            checked={needsLoginToggle}
+            onChange={(e) => setNeedsLoginToggle(e.target.checked)}
+            className="size-4 shrink-0 rounded border-steel-line accent-ink"
+          />
+          <span>This task needs a login</span>
+        </label>
+        {secretsVisible ? (
+          <RunSecretsEditor
+            disabled={creating}
+            rows={secretRows}
+            onChange={setSecretRows}
+          />
+        ) : null}
         <button
           type="submit"
           disabled={creating}

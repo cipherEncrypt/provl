@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getKaneAccount } from "@/lib/provl/kaneAccountStore";
 import { ensureSessionId } from "@/lib/provl/session";
+import { toPublicWatch } from "@/lib/watches/publicWatch";
 import {
   deleteWatch,
   getWatch,
@@ -39,7 +40,7 @@ export async function PATCH(req: Request, context: RouteContext) {
 
   watch.active = body.active;
   await saveWatch(watch);
-  return NextResponse.json({ watch });
+  return NextResponse.json({ watch: toPublicWatch(watch) });
 }
 
 export async function DELETE(_req: Request, context: RouteContext) {

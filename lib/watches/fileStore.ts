@@ -84,6 +84,7 @@ export async function createWatchFile(
     lastStatus: "never",
     lastRunAt: null,
     lastProofId: null,
+    secretsEnc: input.secretsEnc ?? null,
     createdAt: now,
     updatedAt: now,
   };

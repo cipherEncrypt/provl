@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getKaneAccount } from "@/lib/provl/kaneAccountStore";
 import { ensureSessionId } from "@/lib/provl/session";
+import { toPublicWatch } from "@/lib/watches/publicWatch";
 import { runWatchJob } from "@/lib/watches/runWatchJob";
 import {
   getWatch,
@@ -27,7 +28,7 @@ export async function POST(_req: Request, context: RouteContext) {
 
   return NextResponse.json(
     {
-      watch: updated,
+      watch: toPublicWatch(updated),
       run: {
         done: result.done,
         exitCode: result.exitCode,

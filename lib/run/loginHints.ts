@@ -8,6 +8,10 @@ export function taskSuggestsLogin(task: string): boolean {
   return LOGIN_TASK_PATTERN.test(task);
 }
 
+export function taskNeedsStoredSecrets(task: string): boolean {
+  return /\{\{[^}]+\}\}/.test(task);
+}
+
 function loginRelatedBlob(parts: (string | null | undefined)[]): string {
   return parts
     .filter((p): p is string => Boolean(p))

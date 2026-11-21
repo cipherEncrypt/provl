@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 
 import { getKaneAccount } from "@/lib/provl/kaneAccountStore";
 import { ensureSessionId } from "@/lib/provl/session";
+import { toPublicWatch } from "@/lib/watches/publicWatch";
 import { validateWatchCreate } from "@/lib/watches/validateWatch";
+import { encryptWatchSecrets } from "@/lib/watches/watchSecrets";
 import { createWatch, listWatches } from "@/lib/watches/watchStore";
 
 export async function GET() {
@@ -11,7 +13,7 @@ export async function GET() {
   const userId = account?.username?.trim() ?? null;
 
   const watches = await listWatches({ sessionId, userId });
-  return NextResponse.json({ watches });
+  return NextResponse.json({ watches: watches.map(toPublicWatch) });
 }
 
 export async function POST(req: Request) {
@@ -31,11 +33,24 @@ export async function POST(req: Request) {
   const account = await getKaneAccount(sessionId);
   const userId = account?.username?.trim() ?? null;
 
+  let secretsEnc: string | null = null;
+  try {
+    secretsEnc = encryptWatchSecrets(parsed.data.secrets);
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : "Could not store monitor secrets";
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
+
   const watch = await createWatch({
     sessionId,
     userId,
-    ...parsed.data,
+    task: parsed.data.task,
+    url: parsed.data.url,
+    schedule: parsed.data.schedule,
+    alertEmail: parsed.data.alertEmail,
+    secretsEnc,
   });
 
-  return NextResponse.json({ watch }, { status: 201 });
+  return NextResponse.json({ watch: toPublicWatch(watch) }, { status: 201 });
 }

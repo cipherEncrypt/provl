@@ -1,6 +1,5 @@
-import { taskSuggestsLogin } from "@/lib/run/loginHints";
-
 import type { WatchSchedule } from "./types";
+import { validateWatchSecretsForTask } from "./watchSecrets";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,17 +13,21 @@ export function validateWatchCreate(body: {
   url?: string;
   schedule?: unknown;
   alertEmail?: string;
-}): { ok: true; data: { task: string; url?: string; schedule: WatchSchedule; alertEmail: string } } | { ok: false; error: string } {
+  secrets?: { key: string; value: string }[];
+}):
+  | {
+      ok: true;
+      data: {
+        task: string;
+        url?: string;
+        schedule: WatchSchedule;
+        alertEmail: string;
+        secrets?: { key: string; value: string }[];
+      };
+    }
+  | { ok: false; error: string } {
   const task = body.task?.trim();
   if (!task) return { ok: false, error: "task is required" };
-
-  if (taskSuggestsLogin(task)) {
-    return {
-      ok: false,
-      error:
-        "Scheduled tasks don't support logins yet. Remove login wording and {{placeholders}} from the task.",
-    };
-  }
 
   const schedule = parseWatchSchedule(body.schedule);
   if (!schedule) {
@@ -36,6 +39,19 @@ export function validateWatchCreate(body: {
     return { ok: false, error: "A valid alert email is required" };
   }
 
+  const secretsCheck = validateWatchSecretsForTask(task, body.secrets);
+  if (!secretsCheck.ok) return secretsCheck;
+
   const url = body.url?.trim() || undefined;
-  return { ok: true, data: { task, url, schedule, alertEmail } };
+  const secrets = body.secrets?.filter((r) => r.key?.trim() && r.value);
+  return {
+    ok: true,
+    data: {
+      task,
+      url,
+      schedule,
+      alertEmail,
+      ...(secrets?.length ? { secrets } : {}),
+    },
+  };
 }

@@ -14,8 +14,14 @@ export type WatchRecord = {
   lastStatus: WatchLastStatus;
   lastRunAt: string | null;
   lastProofId: string | null;
+  /** Encrypted JSON map of Kane variables; never returned from list APIs. */
+  secretsEnc?: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export type WatchPublic = Omit<WatchRecord, "secretsEnc"> & {
+  hasSecrets: boolean;
 };
 
 export type WatchListScope = {
@@ -30,6 +36,7 @@ export type WatchCreateInput = {
   url?: string;
   schedule: WatchSchedule;
   alertEmail: string;
+  secretsEnc?: string | null;
 };
 
 export type WatchUpdateAfterRun = {
