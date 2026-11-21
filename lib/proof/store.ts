@@ -41,6 +41,7 @@ export type ProofHistoryItem = Pick<
   "id" | "createdAt" | "task" | "done" | "creditsConsumed"
 >;
 
+/** File-backed session history (fallback when Mongo is off or unreachable). */
 export async function listProofsForSession(
   sessionId: string,
 ): Promise<ProofHistoryItem[]> {
