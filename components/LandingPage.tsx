@@ -82,9 +82,9 @@ export function LandingPage() {
       </header>
 
       <main id="main">
-        {/* Hero — matches reference: CTAs over concentric waves + hands */}
-        <section className="hero-waves relative overflow-hidden px-4 pb-10 pt-14 text-center sm:px-6 sm:pb-14 sm:pt-16">
-          <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center">
+        {/* Hero — full-bleed art blended into waves (no card / no hard edges) */}
+        <section className="hero-waves relative isolate overflow-hidden pt-14 text-center sm:pt-16">
+          <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-4 sm:px-6">
             <PillTag label="Verified by Kane CLI" />
 
             <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem]">
@@ -106,37 +106,40 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="relative z-10 mx-auto mt-6 w-full max-w-5xl sm:mt-2">
+          {/* Edge-to-edge art — CSS + JPEG vignette dissolve into page white */}
+          <div className="hero-art-flow relative z-0 mt-2 w-screen max-w-none left-1/2 -translate-x-1/2 sm:mt-0">
             <Image
               src="/hero.jpg"
-              alt="Robot hand and human hand reaching toward each other on a soft topographic wave background"
-              width={1024}
-              height={374}
+              alt="Robot hand and human hand reaching toward each other"
+              width={1146}
+              height={451}
               priority
-              className="mx-auto h-auto w-full max-w-5xl object-contain object-center"
-              sizes="(max-width: 1024px) 100vw, 1024px"
+              sizes="100vw"
+              className="hero-art-img h-auto w-full select-none object-cover object-center"
             />
           </div>
 
-          <p className="relative z-10 mt-6 text-xs font-medium tracking-wide text-steel sm:mt-8">
-            Powered by Kane CLI · Works with Claude Code, Cursor, Codex
-          </p>
-          <ul className="relative z-10 mt-5 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-            {["Kane CLI", "Claude Code", "Cursor", "Codex"].map((name) => (
-              <li
-                key={name}
-                className="flex items-center gap-2 text-sm font-semibold text-ink/65"
-              >
-                <span
-                  className="flex h-7 w-7 items-center justify-center rounded-[6px] border border-steel-line bg-paper text-[10px] font-bold"
-                  aria-hidden="true"
+          <div className="relative z-10 mx-auto px-4 pb-14 pt-2 sm:px-6 sm:pb-16">
+            <p className="text-xs font-medium tracking-wide text-steel">
+              Powered by Kane CLI · Works with Claude Code, Cursor, Codex
+            </p>
+            <ul className="mt-5 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+              {["Kane CLI", "Claude Code", "Cursor", "Codex"].map((name) => (
+                <li
+                  key={name}
+                  className="flex items-center gap-2 text-sm font-semibold text-ink/65"
                 >
-                  {name.charAt(0)}
-                </span>
-                {name}
-              </li>
-            ))}
-          </ul>
+                  <span
+                    className="flex h-7 w-7 items-center justify-center rounded-[6px] border border-steel-line bg-paper text-[10px] font-bold"
+                    aria-hidden="true"
+                  >
+                    {name.charAt(0)}
+                  </span>
+                  {name}
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* How it works */}

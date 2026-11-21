@@ -62,6 +62,26 @@ body {
   background-repeat: no-repeat;
 }
 
+/* Full-bleed hero art — no card / border; dissolves into page white */
+.hero-art-flow {
+  width: 100vw;
+}
+
+.hero-art-img {
+  display: block;
+  width: 100%;
+  max-height: min(58vh, 560px);
+  /* Soft vignette — no hard JPEG rectangle on the page */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 10%, #000 82%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 10%, #000 82%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
 @layer components {
   .pill-tag {
     @apply inline-flex items-center gap-2 rounded-full border border-steel-line bg-paper px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink shadow-pill;
