@@ -64,67 +64,33 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Full-bleed hero art — left/right dissolve into page white (no imported-box edges) */
+/* Full-bleed hero art — transparent side fade into page (no white box / hard crop) */
 .hero-art-flow {
   position: relative;
   width: 100vw;
-  background: #ffffff;
-  isolation: isolate;
-}
-
-.hero-art-flow::before,
-.hero-art-flow::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: min(48vw, 420px);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.hero-art-flow::before {
-  left: 0;
-  background: linear-gradient(
-    to right,
-    #ffffff 0%,
-    #ffffff 55%,
-    rgba(255, 255, 255, 0) 100%
-  );
-}
-
-.hero-art-flow::after {
-  right: 0;
-  background: linear-gradient(
-    to left,
-    #ffffff 0%,
-    #ffffff 55%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: transparent;
 }
 
 .hero-art-img {
   display: block;
-  position: relative;
-  z-index: 1;
   width: 100%;
   height: auto;
   object-fit: contain;
   object-position: center center;
-  background: #ffffff;
-  /* Soft mask so left/right never read as a hard image crop */
+  background: transparent;
+  /* Extra soft dissolve so left/right never read as an imported rectangle */
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    #000 18%,
-    #000 82%,
+    #000 22%,
+    #000 78%,
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    #000 18%,
-    #000 82%,
+    #000 22%,
+    #000 78%,
     transparent 100%
   );
 }
