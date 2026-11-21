@@ -64,6 +64,7 @@ export async function POST(req: Request) {
 
   await appendRunHistory({
     sessionId,
+    userId: connected?.username?.trim() ?? null,
     proofId: proof.id,
     task,
     url,

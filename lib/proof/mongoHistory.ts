@@ -1,12 +1,13 @@
-import type { Collection } from "mongodb";
+import type { Collection, Filter } from "mongodb";
 
 import { getMongoDb } from "./mongoClient";
-import type { RunHistoryInsert, RunHistoryItem } from "./historyTypes";
+import type { RunHistoryInsert, RunHistoryItem, RunHistoryListScope } from "./historyTypes";
 
 const COLLECTION = "runs";
 
 type RunHistoryDoc = {
   sessionId: string;
+  userId: string | null;
   done: boolean;
   task: string;
   url?: string | null;
@@ -31,6 +32,7 @@ export async function insertRunHistoryMongo(
   try {
     await coll.insertOne({
       sessionId: entry.sessionId,
+      userId: entry.userId,
       done: entry.done,
       task: entry.task,
       url: entry.url ?? null,
@@ -46,15 +48,34 @@ export async function insertRunHistoryMongo(
   }
 }
 
+function listFilter(scope: RunHistoryListScope): Filter<RunHistoryDoc> {
+  const userId = scope.userId?.trim();
+  if (userId) {
+    return { userId };
+  }
+  const sessionId = scope.sessionId.trim();
+  return {
+    sessionId,
+    $or: [{ userId: null }, { userId: { $exists: false } }],
+  };
+}
+
 export async function listRunHistoryMongo(
-  sessionId: string,
+  scope: RunHistoryListScope,
 ): Promise<RunHistoryItem[] | null> {
   const coll = await runsCollection();
   if (!coll) return null;
 
+  const userId = scope.userId?.trim();
+  if (userId) {
+    // Connected Kane account: history is account-wide, never unscoped.
+  } else if (!scope.sessionId.trim()) {
+    return [];
+  }
+
   try {
     const docs = await coll
-      .find({ sessionId })
+      .find(listFilter(scope))
       .sort({ createdAt: -1 })
       .toArray();
 
