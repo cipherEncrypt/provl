@@ -5,15 +5,11 @@ import { useState } from "react";
 import type { RunApiResponse } from "@/lib/api-types";
 
 import { DemoPresets } from "./DemoPresets";
-import { FaqSection } from "./FaqSection";
-import { HowItWorks } from "./HowItWorks";
 import { PillTag } from "./PillTag";
 import { ResultCard } from "./ResultCard";
 import { RunForm } from "./RunForm";
 import { RunLoading } from "./RunLoading";
-import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
-import { TrustRow } from "./TrustRow";
 
 export function ProvlHome() {
   const [loading, setLoading] = useState(false);
@@ -62,10 +58,10 @@ export function ProvlHome() {
         Skip to task
       </a>
 
-      <SiteHeader />
+      <SiteHeader variant="workbench" />
 
       <main className="flex-1">
-        <section className="mx-auto flex w-full max-w-xl flex-col items-center px-4 pb-8 pt-6 text-center sm:px-6 sm:pt-16">
+        <section className="mx-auto flex w-full max-w-xl flex-col items-center px-4 pb-10 pt-6 text-center sm:px-6 sm:pt-12">
           <PillTag label="Verified by Kane CLI" />
 
           <h1 className="mt-5 text-balance text-[1.85rem] font-semibold leading-[1.15] tracking-tight text-ink sm:mt-6 sm:text-5xl sm:leading-[1.08]">
@@ -98,7 +94,7 @@ export function ProvlHome() {
           </div>
 
           {(loading || error || result) && (
-            <div className="mt-8 w-full space-y-4 text-left">
+            <div className="mt-6 w-full space-y-4 text-left">
               {loading && <RunLoading />}
 
               {error && (
@@ -120,30 +116,13 @@ export function ProvlHome() {
             </div>
           )}
         </section>
-
-        <TrustRow />
-        <HowItWorks />
-        <FaqSection />
-
-        <section className="mx-auto w-full max-w-3xl px-4 pb-8 sm:px-6">
-          <div className="surface-card flex flex-col items-start gap-4 text-left sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <PillTag label="Verified by Kane CLI" />
-              <h2 className="mt-4 text-2xl font-semibold tracking-tight text-ink">
-                Ready when you are.
-              </h2>
-              <p className="mt-2 max-w-md text-sm text-steel">
-                Describe a chore, wait a few minutes, walk away with a proof card.
-              </p>
-            </div>
-            <a href="#run" className="btn-primary shrink-0">
-              Run a task
-            </a>
-          </div>
-        </section>
       </main>
 
-      <SiteFooter />
+      <footer className="border-t border-steel-line/80 pb-[env(safe-area-inset-bottom)]">
+        <p className="mx-auto max-w-xl px-4 py-5 text-center text-xs text-steel-soft sm:px-6">
+          Verified by Kane CLI · Runs on real Chrome · runs take 1–3 minutes
+        </p>
+      </footer>
     </div>
   );
 }

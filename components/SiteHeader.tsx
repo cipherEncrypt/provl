@@ -1,11 +1,18 @@
 import Link from "next/link";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  /** Workbench chrome: wordmark + How it works only */
+  variant?: "default" | "workbench";
+};
+
+export function SiteHeader({ variant = "default" }: SiteHeaderProps) {
+  const workbench = variant === "workbench";
+
   return (
-    <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:py-5">
+    <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:py-4">
       <Link
         href="/"
-        className="flex min-w-0 items-center gap-2 text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded-btn"
+        className="flex min-w-0 items-center gap-2 rounded-btn text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
         translate="no"
       >
         <span
@@ -21,26 +28,37 @@ export function SiteHeader() {
             />
           </svg>
         </span>
-        <span className="truncate text-[17px] font-semibold tracking-tight">Provl</span>
+        <span className="truncate text-[17px] font-semibold tracking-tight">
+          Provl
+        </span>
       </Link>
 
-      <nav className="flex shrink-0 items-center gap-2 text-sm text-steel-mute sm:gap-5" aria-label="Primary">
+      {workbench ? (
         <Link
           href="/#how-it-works"
-          className="hidden hover:text-ink sm:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+          className="text-sm text-steel-mute hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
         >
           How it works
         </Link>
-        <Link
-          href="/demo/subscription"
-          className="hidden hover:text-ink md:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+      ) : (
+        <nav
+          className="flex shrink-0 items-center gap-2 text-sm text-steel-mute sm:gap-5"
+          aria-label="Primary"
         >
-          Sandbox
-        </Link>
-        <Link href="/app" className="btn-primary !px-3.5 !py-2 text-xs sm:!px-4 sm:text-sm">
-          Open app
-        </Link>
-      </nav>
+          <Link
+            href="/#how-it-works"
+            className="hidden hover:text-ink sm:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+          >
+            How it works
+          </Link>
+          <Link
+            href="/app"
+            className="btn-primary !px-3.5 !py-2 text-xs sm:!px-4 sm:text-sm"
+          >
+            Open app
+          </Link>
+        </nav>
+      )}
     </header>
   );
 }
