@@ -1,3 +1,4 @@
+import { notifyWatchFailureIfNeeded } from "@/lib/alerts/notifyWatchFailure";
 import { executeRunAndSaveProof } from "@/lib/provl/executeRunAndSaveProof";
 
 import type { WatchRecord } from "./types";
@@ -16,6 +17,8 @@ export async function runWatchJob(watch: WatchRecord) {
     lastRunAt: ranAt,
     lastProofId: result.proofId,
   });
+
+  await notifyWatchFailureIfNeeded(updated, result);
 
   return { watch: updated, result };
 }
