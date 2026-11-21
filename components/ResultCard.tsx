@@ -19,74 +19,80 @@ export function ResultCard({
   const stateEntries = Object.entries(result.finalState ?? {});
 
   return (
-    <article
-      className={`rounded-2xl border p-5 shadow-lg sm:p-6 ${
-        result.done
-          ? "border-emerald-800/60 bg-emerald-950/30"
-          : "border-amber-900/50 bg-amber-950/20"
-      }`}
-    >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <span
-          className={`inline-flex rounded-full px-3 py-1 text-sm font-bold tracking-wide ${
-            result.done
-              ? "bg-emerald-600/20 text-emerald-300"
-              : "bg-amber-600/20 text-amber-200"
+    <article className="surface-card w-full">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <p
+          className={`text-4xl font-semibold tracking-tight sm:text-5xl ${
+            result.done ? "text-ink" : "text-steel"
           }`}
+          aria-label={result.done ? "Verdict: done" : "Verdict: not done"}
         >
-          {result.done ? "DONE" : "NOT DONE"}
-        </span>
+          {result.done ? (
+            "DONE"
+          ) : (
+            <span className="inline-block rounded-btn border-2 border-steel-soft px-3 py-1 text-3xl text-steel-mute sm:text-4xl">
+              NOT DONE
+            </span>
+          )}
+        </p>
         {durationLabel && (
-          <span className="text-sm text-slate-400">Duration {durationLabel}</span>
+          <p className="tabular-nums text-sm text-steel">
+            Duration {durationLabel}
+          </p>
         )}
       </div>
 
       {result.oneLiner && (
-        <p className="mt-4 text-lg font-medium leading-snug text-slate-100">
+        <p className="mt-5 text-lg font-medium leading-snug text-ink text-pretty">
           {result.oneLiner}
         </p>
       )}
 
       {result.summary && (
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-steel">
           {result.summary}
         </p>
       )}
 
       {!result.done && result.honestStop && (
-        <div className="mt-4 rounded-xl border border-amber-800/40 bg-slate-950/60 px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-300/90">
+        <div className="mt-5 rounded-card border border-steel-line bg-mist/80 px-4 py-4">
+          <p className="text-xs font-semibold tracking-wide text-steel-mute">
             Where it stopped
           </p>
-          <p className="mt-2 whitespace-pre-wrap text-sm text-slate-300">
+          <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-ink/80">
             {result.honestStop.message}
           </p>
         </div>
       )}
 
       {stateEntries.length > 0 && (
-        <div className="mt-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <div className="mt-6">
+          <p className="text-xs font-semibold tracking-wide text-steel-soft">
             Proof fields
           </p>
-          <dl className="mt-2 space-y-2">
+          <dl className="mt-3 divide-y divide-steel-line overflow-hidden rounded-card border border-steel-line">
             {stateEntries.map(([key, value]) => (
               <div
                 key={key}
-                className="flex flex-col gap-0.5 rounded-lg bg-slate-950/50 px-3 py-2 sm:flex-row sm:justify-between sm:gap-4"
+                className="flex flex-col gap-1 bg-paper px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
               >
-                <dt className="text-sm text-slate-400">{humanizeKey(key)}</dt>
-                <dd className="text-sm font-medium text-slate-100 break-all">{value}</dd>
+                <dt className="shrink-0 text-sm text-steel">{humanizeKey(key)}</dt>
+                <dd className="min-w-0 break-words text-sm font-medium text-ink tabular-nums">
+                  {value}
+                </dd>
               </div>
             ))}
           </dl>
         </div>
       )}
 
-      <footer className="mt-6 flex flex-col gap-3 border-t border-slate-800/80 pt-4 text-sm">
+      <footer className="mt-6 flex flex-col gap-3 border-t border-steel-line pt-5">
         {result.creditsConsumed != null && (
-          <p className="text-slate-500">
-            Credits used: {result.creditsConsumed.toFixed(1)}
+          <p className="text-sm text-steel-soft">
+            Credits used:{" "}
+            <span className="tabular-nums">
+              {result.creditsConsumed.toFixed(1)}
+            </span>
             {result.attempts > 1 ? ` · ${result.attempts} attempts` : null}
           </p>
         )}
@@ -96,21 +102,18 @@ export function ResultCard({
             href={result.replayUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-xl border border-slate-600 bg-slate-900 px-4 py-2.5 font-medium text-emerald-300 hover:border-emerald-700 hover:bg-slate-800"
+            className="btn-primary w-full"
           >
             Open browser replay
           </a>
         )}
 
         {showShareHint && proofUrl && (
-          <div className="rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-card border border-steel-line bg-mist/60 px-4 py-4">
+            <p className="text-xs font-semibold tracking-wide text-steel-soft">
               Share proof
             </p>
-            <Link
-              href={proofUrl}
-              className="mt-2 inline-flex rounded-lg bg-slate-800 px-3 py-2 font-medium text-emerald-300 hover:bg-slate-700"
-            >
+            <Link href={proofUrl} className="btn-secondary mt-3 w-full sm:w-auto">
               Open shareable proof page
             </Link>
           </div>

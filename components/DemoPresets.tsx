@@ -7,6 +7,11 @@ type DemoPresetsProps = {
   onRunPreset: (task: string, url: string) => void;
 };
 
+const SHORT_LABEL: Record<string, string> = {
+  cancel: "Try: cancel a subscription",
+  "honest-fail": "Try: honest fail",
+};
+
 export function DemoPresets({ disabled, onRunPreset }: DemoPresetsProps) {
   function run(preset: DemoPreset) {
     const origin =
@@ -17,27 +22,19 @@ export function DemoPresets({ disabled, onRunPreset }: DemoPresetsProps) {
   }
 
   return (
-    <div className="flex w-full flex-col gap-3">
-      <p className="text-sm font-medium text-slate-400">Try a demo (one click)</p>
-      <div className="grid gap-3 sm:grid-cols-2">
+    <div className="flex w-full flex-col items-center gap-3">
+      <p className="text-sm text-steel">Or try a one-click demo</p>
+      <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-center">
         {DEMO_PRESETS.map((preset) => (
           <button
             key={preset.id}
             type="button"
             disabled={disabled}
             onClick={() => run(preset)}
-            className={`rounded-xl border px-4 py-3 text-left transition disabled:opacity-50 ${
-              preset.expect === "done"
-                ? "border-emerald-800/60 bg-emerald-950/20 hover:border-emerald-600/80"
-                : "border-amber-800/50 bg-amber-950/15 hover:border-amber-600/70"
-            }`}
+            title={preset.description}
+            className="btn-secondary w-full rounded-full px-5 sm:w-auto"
           >
-            <span className="block text-sm font-semibold text-slate-100">
-              {preset.label}
-            </span>
-            <span className="mt-1 block text-xs text-slate-400">
-              {preset.description}
-            </span>
+            {SHORT_LABEL[preset.id] ?? preset.label}
           </button>
         ))}
       </div>

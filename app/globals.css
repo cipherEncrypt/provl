@@ -2,6 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+  --ink: #0a0a0a;
+  --mist: #f4f4f5;
+  --paper: #ffffff;
+  --steel: #71717a;
+  --line: #e4e4e7;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
+  @apply bg-mist font-sans text-ink antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% 0%, #ffffff 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, #ffffff 0%, transparent 65%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Soft topographic lines — geometric depth, no stock imagery */
+.topo-bg {
+  background-color: #f4f4f5;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 18%, #ffffff 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='1200' height='800' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 120 Q300 80 600 140 T1200 100' fill='none' stroke='%23e4e4e7' stroke-width='1'/%3E%3Cpath d='M0 220 Q350 180 700 240 T1200 200' fill='none' stroke='%23e8e8ea' stroke-width='1'/%3E%3Cpath d='M0 340 Q280 300 560 360 T1200 320' fill='none' stroke='%23e4e4e7' stroke-width='1'/%3E%3Cpath d='M0 460 Q400 420 800 480 T1200 440' fill='none' stroke='%23ebebed' stroke-width='1'/%3E%3Cpath d='M0 580 Q320 540 640 600 T1200 560' fill='none' stroke='%23e4e4e7' stroke-width='1'/%3E%3Cpath d='M0 700 Q360 660 720 720 T1200 680' fill='none' stroke='%23ebebed' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: cover, 100% auto;
+  background-position: center top, center bottom;
+  background-repeat: no-repeat;
+}
+
+@layer components {
+  .pill-tag {
+    @apply inline-flex items-center gap-2 rounded-full border border-steel-line bg-paper px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink shadow-pill;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-btn bg-ink px-5 py-3 text-sm font-semibold text-white shadow-btn transition-[background-color,opacity,transform] duration-150 hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-steel-soft disabled:shadow-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-btn border border-steel-line bg-paper px-4 py-2.5 text-sm font-medium text-ink shadow-pill transition-[background-color,border-color] duration-150 hover:border-steel-soft hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .surface-card {
+    @apply rounded-card border border-steel-line/80 bg-paper p-6 shadow-soft sm:p-8;
+  }
+
+  .field-input {
+    @apply w-full rounded-btn border border-steel-line bg-paper px-4 py-3 text-base text-ink placeholder:text-steel-soft transition-[border-color,box-shadow] duration-150 focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink disabled:cursor-not-allowed disabled:bg-mist disabled:opacity-70;
+  }
 }

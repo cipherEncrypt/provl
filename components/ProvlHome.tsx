@@ -1,14 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import type { RunApiResponse } from "@/lib/api-types";
 
 import { DemoPresets } from "./DemoPresets";
+import { FaqSection } from "./FaqSection";
+import { HowItWorks } from "./HowItWorks";
+import { PillTag } from "./PillTag";
 import { ResultCard } from "./ResultCard";
 import { RunForm } from "./RunForm";
 import { RunLoading } from "./RunLoading";
+import { SiteFooter } from "./SiteFooter";
+import { SiteHeader } from "./SiteHeader";
+import { TrustRow } from "./TrustRow";
 
 export function ProvlHome() {
   const [loading, setLoading] = useState(false);
@@ -49,56 +54,96 @@ export function ProvlHome() {
   }
 
   return (
-    <div className="flex w-full flex-col gap-8">
-      <header className="space-y-2 text-center sm:text-left">
-        <p className="text-sm uppercase tracking-wide text-emerald-500/90">Provl</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Proof for web chores
-        </h1>
-        <p className="text-slate-400">
-          Describe a task in plain English. Provl runs it in a real browser and
-          returns a pass or fail you can trust.
-        </p>
-      </header>
+    <div className="flex min-h-dvh flex-col">
+      <a
+        href="#run"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-btn focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
+      >
+        Skip to task
+      </a>
 
-      <DemoPresets
-        disabled={loading}
-        onRunPreset={(t, u) => {
-          void runTask(t, u);
-        }}
-      />
+      <SiteHeader />
 
-      <RunForm
-        disabled={loading}
-        task={task}
-        url={url}
-        onTaskChange={setTask}
-        onUrlChange={setUrl}
-        onSubmit={runTask}
-      />
+      <main className="flex-1">
+        <section className="mx-auto flex w-full max-w-xl flex-col items-center px-4 pb-8 pt-10 text-center sm:px-6 sm:pt-16">
+          <PillTag label="Verified by Kane CLI" />
 
-      {loading && <RunLoading />}
+          <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl sm:leading-[1.08]">
+            Get proof it was actually done.
+          </h1>
 
-      {error && (
-        <p className="rounded-xl border border-red-900/50 bg-red-950/40 px-4 py-3 text-sm text-red-200">
-          {error}
-        </p>
-      )}
+          <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-steel sm:text-lg">
+            Tell Provl a web task in plain English. It runs in a real browser and
+            returns a verdict you can replay — not an unverified “done.”
+          </p>
 
-      {result && !loading && (
-        <ResultCard
-          result={result}
-          proofUrl={result.proofUrl ?? null}
-          showShareHint={Boolean(result.proofUrl)}
-        />
-      )}
+          <div className="mt-10 w-full text-left">
+            <RunForm
+              disabled={loading}
+              task={task}
+              url={url}
+              onTaskChange={setTask}
+              onUrlChange={setUrl}
+              onSubmit={runTask}
+            />
+          </div>
 
-      <p className="text-center text-sm text-slate-500">
-        Sandbox cancel demo:{" "}
-        <Link href="/demo/subscription" className="text-emerald-400 underline-offset-2 hover:underline">
-          /demo/subscription
-        </Link>
-      </p>
+          <div className="mt-5 w-full">
+            <DemoPresets
+              disabled={loading}
+              onRunPreset={(t, u) => {
+                void runTask(t, u);
+              }}
+            />
+          </div>
+
+          {(loading || error || result) && (
+            <div className="mt-8 w-full space-y-4 text-left">
+              {loading && <RunLoading />}
+
+              {error && (
+                <p
+                  className="rounded-card border border-steel-line bg-paper px-4 py-3 text-sm text-ink shadow-soft"
+                  role="alert"
+                >
+                  {error}
+                </p>
+              )}
+
+              {result && !loading && (
+                <ResultCard
+                  result={result}
+                  proofUrl={result.proofUrl ?? null}
+                  showShareHint={Boolean(result.proofUrl)}
+                />
+              )}
+            </div>
+          )}
+        </section>
+
+        <TrustRow />
+        <HowItWorks />
+        <FaqSection />
+
+        <section className="mx-auto w-full max-w-3xl px-4 pb-8 sm:px-6">
+          <div className="surface-card flex flex-col items-start gap-4 text-left sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <PillTag label="Verified by Kane CLI" />
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight text-ink">
+                Ready when you are.
+              </h2>
+              <p className="mt-2 max-w-md text-sm text-steel">
+                Describe a chore, wait a few minutes, walk away with a proof card.
+              </p>
+            </div>
+            <a href="#run" className="btn-primary shrink-0">
+              Run a task
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <SiteFooter />
     </div>
   );
 }
