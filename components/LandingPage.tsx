@@ -60,8 +60,8 @@ export function LandingPage() {
             <Image
               src="/hero.png"
               alt="Robot hand and human hand reaching toward each other"
-              width={1474}
-              height={465}
+              width={1024}
+              height={480}
               priority
               sizes="100vw"
               className="hero-art-img h-auto w-full select-none"

@@ -69,7 +69,6 @@ body {
   position: relative;
   width: 100vw;
   background: #ffffff;
-  /* Extra white washes on the sides so any residual edge disappears */
   isolation: isolate;
 }
 
@@ -79,7 +78,7 @@ body {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: min(42vw, 320px);
+  width: min(48vw, 420px);
   z-index: 2;
   pointer-events: none;
 }
@@ -89,7 +88,7 @@ body {
   background: linear-gradient(
     to right,
     #ffffff 0%,
-    #ffffff 45%,
+    #ffffff 55%,
     rgba(255, 255, 255, 0) 100%
   );
 }
@@ -99,7 +98,7 @@ body {
   background: linear-gradient(
     to left,
     #ffffff 0%,
-    #ffffff 45%,
+    #ffffff 55%,
     rgba(255, 255, 255, 0) 100%
   );
 }
@@ -110,10 +109,24 @@ body {
   z-index: 1;
   width: 100%;
   height: auto;
-  /* contain — never crop the baked white side fades (cover was cutting them off) */
   object-fit: contain;
   object-position: center center;
   background: #ffffff;
+  /* Soft mask so left/right never read as a hard image crop */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 18%,
+    #000 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 18%,
+    #000 82%,
+    transparent 100%
+  );
 }
 
 @layer components {
