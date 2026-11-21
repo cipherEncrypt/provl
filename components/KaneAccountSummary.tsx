@@ -9,9 +9,13 @@ import { LT_BILLING, LT_KEY_HELP } from "@/lib/kane/constants";
 
 type KaneAccountSummaryProps = {
   refreshNonce?: number;
+  showSignOut?: boolean;
 };
 
-export function KaneAccountSummary({ refreshNonce = 0 }: KaneAccountSummaryProps) {
+export function KaneAccountSummary({
+  refreshNonce = 0,
+  showSignOut = true,
+}: KaneAccountSummaryProps) {
   const router = useRouter();
   const [status, setStatus] = useState<KaneAccountStatus | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,22 +66,24 @@ export function KaneAccountSummary({ refreshNonce = 0 }: KaneAccountSummaryProps
             <p className="mt-1 text-sm text-steel">—</p>
           )}
         </div>
-        <div className="flex flex-wrap gap-2">
-          {connected ? (
-            <button
-              type="button"
-              className="btn-secondary text-sm"
-              disabled={loading}
-              onClick={() => void handleDisconnect()}
-            >
-              Sign out
-            </button>
-          ) : demoMode ? (
-            <Link href="/connect" className="btn-secondary text-sm">
-              Connect Kane account
-            </Link>
-          ) : null}
-        </div>
+        {showSignOut && (
+          <div className="flex flex-wrap gap-2">
+            {connected ? (
+              <button
+                type="button"
+                className="btn-secondary text-sm"
+                disabled={loading}
+                onClick={() => void handleDisconnect()}
+              >
+                Sign out
+              </button>
+            ) : demoMode ? (
+              <Link href="/connect" className="btn-secondary text-sm">
+                Connect Kane account
+              </Link>
+            ) : null}
+          </div>
+        )}
       </div>
 
       <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-steel-line/80 pt-4 text-sm">
