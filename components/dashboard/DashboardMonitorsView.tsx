@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { WatchLastStatus, WatchSchedule } from "@/lib/watches/types";
 
@@ -34,26 +34,118 @@ function truncateTask(task: string, max = 72): string {
 
 export function DashboardMonitorsView() {
   const [watches, setWatches] = useState<WatchRow[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [formTask, setFormTask] = useState(
+    'Verify the subscription page shows "Cancel subscription" and is not already canceled.',
+  );
+  const [formUrl, setFormUrl] = useState("http://localhost:3000/demo/subscription");
+  const [formSchedule, setFormSchedule] = useState<WatchSchedule>("daily");
+  const [formEmail, setFormEmail] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [runningId, setRunningId] = useState<string | null>(null);
+  const [runNotice, setRunNotice] = useState<string | null>(null);
+
+  const loadWatches = useCallback(async () => {
+    try {
+      const res = await fetch("/api/watches", { cache: "no-store" });
+      if (!res.ok) {
+        setWatches([]);
+        return;
+      }
+      const data = (await res.json()) as { watches: WatchRow[] };
+      setWatches(data.watches);
+    } catch {
+      setWatches([]);
+    }
+  }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/watches", { cache: "no-store" });
-        if (!res.ok) {
-          if (!cancelled) setWatches([]);
-          return;
-        }
-        const data = (await res.json()) as { watches: WatchRow[] };
-        if (!cancelled) setWatches(data.watches);
-      } catch {
-        if (!cancelled) setWatches([]);
+    void loadWatches();
+  }, [loadWatches]);
+
+  async function handleCreate(e: React.FormEvent) {
+    e.preventDefault();
+    setCreating(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/watches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          task: formTask.trim(),
+          url: formUrl.trim() || undefined,
+          schedule: formSchedule,
+          alertEmail: formEmail.trim(),
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      if (!res.ok) {
+        setError(data.error ?? "Could not create monitor");
+        return;
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+      await loadWatches();
+    } catch {
+      setError("Could not reach the server.");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function handleRunNow(id: string) {
+    setRunningId(id);
+    setError(null);
+    setRunNotice(null);
+    try {
+      const res = await fetch(`/api/watches/${id}/run`, {
+        method: "POST",
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        run?: { done?: boolean; proofUrl?: string };
+      };
+      if (data.error && !data.run) {
+        setError(data.error);
+        return;
+      }
+      const done = Boolean(data.run?.done);
+      setRunNotice(
+        done
+          ? "Run finished: DONE. Proof is ready."
+          : "Run finished: NOT DONE. Proof saved; alert email sends when Resend is configured.",
+      );
+      await loadWatches();
+      window.dispatchEvent(new Event("provl:account-refresh"));
+    } catch {
+      setError("Run now failed. Is the dev server running?");
+    } finally {
+      setRunningId(null);
+    }
+  }
+
+  async function toggleActive(watch: WatchRow) {
+    try {
+      await fetch(`/api/watches/${watch.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: !watch.active }),
+      });
+      await loadWatches();
+    } catch {
+      setError("Could not update monitor.");
+    }
+  }
+
+  async function handleDelete(id: string) {
+    if (!window.confirm("Delete this monitor?")) return;
+    try {
+      await fetch(`/api/watches/${id}`, { method: "DELETE" });
+      await loadWatches();
+    } catch {
+      setError("Could not delete monitor.");
+    }
+  }
 
   if (watches === null) {
     return (
@@ -73,9 +165,86 @@ export function DashboardMonitorsView() {
         Scheduled tasks don&apos;t support logins yet.
       </p>
 
+      <form
+        onSubmit={handleCreate}
+        className="surface-card mt-8 flex flex-col gap-4"
+        autoComplete="off"
+      >
+        <h2 className="text-sm font-semibold text-ink">New monitor</h2>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-xs font-medium text-steel">Task</span>
+          <textarea
+            required
+            rows={3}
+            disabled={creating}
+            value={formTask}
+            onChange={(e) => setFormTask(e.target.value)}
+            className="field-input min-h-[5rem] resize-y text-sm"
+          />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-xs font-medium text-steel">URL (optional)</span>
+          <input
+            type="url"
+            disabled={creating}
+            value={formUrl}
+            onChange={(e) => setFormUrl(e.target.value)}
+            className="field-input text-sm"
+          />
+        </label>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-steel">Schedule</span>
+            <select
+              disabled={creating}
+              value={formSchedule}
+              onChange={(e) =>
+                setFormSchedule(e.target.value as WatchSchedule)
+              }
+              className="field-input text-sm"
+            >
+              <option value="hourly">Hourly</option>
+              <option value="daily">Daily</option>
+            </select>
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-steel">Alert email</span>
+            <input
+              type="email"
+              required
+              disabled={creating}
+              value={formEmail}
+              onChange={(e) => setFormEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="field-input text-sm"
+            />
+          </label>
+        </div>
+        <button
+          type="submit"
+          disabled={creating}
+          className="btn-secondary w-full text-sm sm:w-auto"
+        >
+          {creating ? "Saving…" : "Save monitor"}
+        </button>
+      </form>
+
+      {error && (
+        <p className="mt-4 rounded-card border border-steel-line bg-paper px-4 py-3 text-sm text-ink" role="alert">
+          {error}
+        </p>
+      )}
+      {runNotice && (
+        <p className="mt-4 rounded-card border border-steel-line bg-mist px-4 py-3 text-sm text-ink" role="status">
+          {runNotice}
+        </p>
+      )}
+
       {watches.length === 0 ? (
         <div className="surface-card mt-8 text-sm text-steel">
-          No monitors yet. You&apos;ll be able to create one in the next step.
+          No monitors yet. Save one above, then use{" "}
+          <strong className="font-medium text-ink">Run now</strong> to demo without
+          waiting for the schedule.
         </div>
       ) : (
         <ul className="mt-8 divide-y divide-steel-line rounded-card border border-steel-line bg-paper shadow-soft">
@@ -88,11 +257,12 @@ export function DashboardMonitorsView() {
               : "-";
             const status = statusLabel(watch.lastStatus);
             const done = watch.lastStatus === "done";
+            const isRunning = runningId === watch.id;
 
             return (
               <li
                 key={watch.id}
-                className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 px-4 py-4 lg:flex-row lg:items-start lg:justify-between"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -114,23 +284,45 @@ export function DashboardMonitorsView() {
                   <p className="mt-1 text-sm text-ink">{truncateTask(watch.task)}</p>
                   <p className="mt-1 text-xs text-steel">
                     Last run: <span className="tabular-nums">{when}</span>
-                    {watch.alertEmail ? (
-                      <>
-                        {" "}
-                        · Alerts:{" "}
-                        <span className="text-steel-mute">{watch.alertEmail}</span>
-                      </>
-                    ) : null}
+                    {" · "}
+                    <span className="text-steel-mute">{watch.alertEmail}</span>
                   </p>
                 </div>
-                {watch.lastProofId ? (
-                  <Link
-                    href={`/proof/${watch.lastProofId}`}
-                    className="btn-secondary shrink-0 text-sm"
+
+                <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap lg:w-auto lg:max-w-md">
+                  <button
+                    type="button"
+                    disabled={isRunning || Boolean(runningId)}
+                    onClick={() => void handleRunNow(watch.id)}
+                    className="btn-primary w-full text-base shadow-btn sm:min-w-[9.5rem] sm:flex-1"
                   >
-                    Latest proof
-                  </Link>
-                ) : null}
+                    {isRunning ? "Running in browser…" : "Run now"}
+                  </button>
+                  {watch.lastProofId ? (
+                    <Link
+                      href={`/proof/${watch.lastProofId}`}
+                      className="btn-secondary w-full text-center text-sm sm:w-auto"
+                    >
+                      Latest proof
+                    </Link>
+                  ) : null}
+                  <button
+                    type="button"
+                    disabled={isRunning}
+                    onClick={() => void toggleActive(watch)}
+                    className="btn-secondary w-full text-sm sm:w-auto"
+                  >
+                    {watch.active ? "Pause" : "Resume"}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isRunning}
+                    onClick={() => void handleDelete(watch.id)}
+                    className="btn-secondary w-full text-sm text-steel sm:w-auto"
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             );
           })}

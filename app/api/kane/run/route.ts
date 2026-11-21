@@ -1,15 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { sanitizeRunArtifacts, sanitizeStoredTask } from "@/lib/kane/sanitizeRunForStorage";
 import { normalizeSecretsInput } from "@/lib/kane/secrets";
-import { runKaneWithRetry } from "@/lib/kane/runWithRetry";
-import {
-  addSessionCredits,
-  getKaneAccount,
-} from "@/lib/provl/kaneAccountStore";
-import { ensureSessionId, getSessionId } from "@/lib/provl/session";
-import { appendRunHistory } from "@/lib/proof/historyStore";
-import { saveProof } from "@/lib/proof/store";
+import { executeRunAndSaveProof } from "@/lib/provl/executeRunAndSaveProof";
+import { getKaneAccount } from "@/lib/provl/kaneAccountStore";
+import { ensureSessionId } from "@/lib/provl/session";
 
 export const maxDuration = 600;
 
@@ -30,78 +24,32 @@ export async function POST(req: Request) {
   }
 
   const sessionId = await ensureSessionId();
-  const connected = await getKaneAccount(sessionId);
+  await getKaneAccount(sessionId);
 
-  const result = await runKaneWithRetry({
+  const result = await executeRunAndSaveProof({
+    sessionId,
     task,
     url,
-    ...(Object.keys(secrets).length > 0 ? { variables: secrets } : {}),
-    ...(connected
-      ? {
-          basicAuth: {
-            username: connected.username,
-            accessKey: connected.accessKey,
-          },
-        }
-      : {}),
+    secrets:
+      Object.keys(secrets).length > 0
+        ? Object.entries(secrets).map(([key, value]) => ({ key, value }))
+        : undefined,
   });
-
-  if (sessionId && connected && result.creditsConsumed != null) {
-    await addSessionCredits(sessionId, result.creditsConsumed);
-  }
-
-  const storedTask = sanitizeStoredTask(task, secrets);
-  const safe = sanitizeRunArtifacts(secrets, {
-    summary: result.summary,
-    oneLiner: result.oneLiner,
-    finalState: result.finalState,
-    honestStop: result.honestStop,
-  });
-
-  const proof = await saveProof({
-    sessionId,
-    task: storedTask,
-    url,
-    done: result.done,
-    exitCode: result.exitCode,
-    replayUrl: result.replayUrl,
-    oneLiner: safe.oneLiner,
-    summary: safe.summary,
-    finalState: safe.finalState,
-    duration: result.duration,
-    creditsConsumed: result.creditsConsumed,
-    honestStop: safe.honestStop,
-    attempts: result.attempts,
-  });
-
-  await appendRunHistory({
-    sessionId,
-    userId: connected?.username?.trim() ?? null,
-    proofId: proof.id,
-    task: storedTask,
-    url,
-    done: proof.done,
-    creditsConsumed: proof.creditsConsumed,
-    durationSec: proof.duration,
-    createdAt: proof.createdAt,
-  });
-
-  const proofUrl = `/proof/${proof.id}`;
 
   return NextResponse.json(
     {
       done: result.done,
       exitCode: result.exitCode,
       replayUrl: result.replayUrl,
-      oneLiner: safe.oneLiner,
-      summary: safe.summary,
-      finalState: safe.finalState,
+      oneLiner: result.oneLiner,
+      summary: result.summary,
+      finalState: result.finalState,
       duration: result.duration,
       creditsConsumed: result.creditsConsumed,
-      honestStop: safe.honestStop,
+      honestStop: result.honestStop,
       attempts: result.attempts,
-      proofId: proof.id,
-      proofUrl,
+      proofId: result.proofId,
+      proofUrl: result.proofUrl,
     },
     { status: result.done ? 200 : 422 },
   );
