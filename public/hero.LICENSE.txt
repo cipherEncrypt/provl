@@ -3,7 +3,7 @@ Source file: public/hero-source.png (design reference provided for Provl)
 
 Cropped from the project design reference screenshot (robot hand meeting human
 hand with topographic wave background). Original chrome (“Book a Demo”,
-“Trusted by…”) removed so Provl’s own CTAs can sit above the art.
+“Explore Our Work”, “Trusted by…”) removed so Provl’s own CTAs can sit above the art.
 
 If you replace this asset later, prefer a royalty-free photo (e.g. Pexels /
 Unsplash) or an original render, and update this file.
