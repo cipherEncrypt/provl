@@ -63,6 +63,7 @@ export function LandingPage() {
               width={1024}
               height={480}
               priority
+              unoptimized
               sizes="100vw"
               className="hero-art-img h-auto w-full select-none"
             />
