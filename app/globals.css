@@ -56,31 +56,63 @@ body {
 }
 
 .hero-waves {
+  position: relative;
   background-color: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='700' viewBox='0 0 1600 700'%3E%3Cg fill='none' stroke='%23cfcfd4' stroke-width='1' opacity='0.5'%3E%3Cellipse cx='800' cy='340' rx='160' ry='55'/%3E%3Cellipse cx='800' cy='340' rx='250' ry='90'/%3E%3Cellipse cx='800' cy='340' rx='360' ry='130'/%3E%3Cellipse cx='800' cy='340' rx='490' ry='180'/%3E%3Cellipse cx='800' cy='340' rx='640' ry='240'/%3E%3Cellipse cx='800' cy='340' rx='820' ry='310'/%3E%3Cellipse cx='800' cy='340' rx='1020' ry='390'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 120% auto;
-  background-position: center 40%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='700' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='45%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='70%25' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='100%25' stop-color='%23fff' stop-opacity='1'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cg fill='none' stroke='%23cfcfd4' stroke-width='1' opacity='0.45'%3E%3Cellipse cx='800' cy='340' rx='160' ry='55'/%3E%3Cellipse cx='800' cy='340' rx='250' ry='90'/%3E%3Cellipse cx='800' cy='340' rx='360' ry='130'/%3E%3Cellipse cx='800' cy='340' rx='490' ry='180'/%3E%3Cellipse cx='800' cy='340' rx='640' ry='240'/%3E%3Cellipse cx='800' cy='340' rx='820' ry='310'/%3E%3Cellipse cx='800' cy='340' rx='1020' ry='390'/%3E%3Cellipse cx='800' cy='340' rx='1220' ry='480'/%3E%3C/g%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 160% auto;
+  background-position: center 35%;
   background-repeat: no-repeat;
 }
 
-/* Full-bleed hero art — no card / border; dissolves into page white */
+/* Full-bleed hero art — left/right dissolve into page white (no imported-box edges) */
 .hero-art-flow {
+  position: relative;
   width: 100vw;
+  background: #ffffff;
+  /* Extra white washes on the sides so any residual edge disappears */
+  isolation: isolate;
+}
+
+.hero-art-flow::before,
+.hero-art-flow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(28vw, 220px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-art-flow::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    #ffffff 0%,
+    #ffffff 35%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.hero-art-flow::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    #ffffff 0%,
+    #ffffff 35%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 .hero-art-img {
   display: block;
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-height: min(42vh, 320px);
-  /* Soft vignette — dissolve into page white on all sides (no hard JPEG frame) */
-  -webkit-mask-image:
-    linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 14%, #000 78%, transparent 100%);
-  mask-image:
-    linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 14%, #000 78%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  object-fit: cover;
+  object-position: center center;
+  background: #ffffff;
 }
 
 @media (min-width: 640px) {
