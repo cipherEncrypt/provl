@@ -183,7 +183,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           <DashboardCreditsPill status={status} />
         </header>
 
-        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main className="flex-1 overflow-y-auto px-4 pb-14 pt-8 sm:px-4 sm:pt-10 lg:px-8 lg:pt-12">
           {children}
         </main>
       </div>

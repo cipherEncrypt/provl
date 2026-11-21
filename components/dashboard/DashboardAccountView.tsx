@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { KaneAccountSummary } from "../KaneAccountSummary";
+import { DashboardViewColumn } from "./DashboardViewColumn";
 
 export function DashboardAccountView() {
   const [refreshNonce, setRefreshNonce] = useState(0);
@@ -14,8 +15,8 @@ export function DashboardAccountView() {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-lg">
+    <DashboardViewColumn>
       <KaneAccountSummary refreshNonce={refreshNonce} showSignOut={false} />
-    </div>
+    </DashboardViewColumn>
   );
 }

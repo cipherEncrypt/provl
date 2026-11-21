@@ -8,6 +8,7 @@ import { DemoPresets } from "../DemoPresets";
 import { ResultCard } from "../ResultCard";
 import { RunForm } from "../RunForm";
 import { RunLoading } from "../RunLoading";
+import { DashboardViewColumn } from "./DashboardViewColumn";
 
 export function DashboardRunView() {
   const [loading, setLoading] = useState(false);
@@ -49,13 +50,13 @@ export function DashboardRunView() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-xl">
-      <p className="text-sm text-steel">
+    <DashboardViewColumn>
+      <p className="text-sm leading-relaxed text-steel">
         Describe a web task in plain English. Provl runs it in real Chrome and
         returns a verdict you can share.
       </p>
 
-      <div id="run" className="mt-6 scroll-mt-8">
+      <div id="run" className="mt-8 scroll-mt-8">
         <RunForm
           disabled={loading}
           task={task}
@@ -66,7 +67,7 @@ export function DashboardRunView() {
         />
       </div>
 
-      <div className="mt-5 w-full">
+      <div className="mt-8 w-full">
         <DemoPresets
           disabled={loading}
           onRunPreset={(t, u) => {
@@ -76,7 +77,7 @@ export function DashboardRunView() {
       </div>
 
       {(loading || error || result) && (
-        <div className="mt-6 space-y-4">
+        <div className="mt-8 w-full space-y-4">
           {loading && <RunLoading />}
 
           {error && (
@@ -97,6 +98,6 @@ export function DashboardRunView() {
           )}
         </div>
       )}
-    </div>
+    </DashboardViewColumn>
   );
 }
