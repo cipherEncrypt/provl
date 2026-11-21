@@ -43,7 +43,7 @@ export function RunForm({
           value={task}
           onChange={(e) => onTaskChange(e.target.value)}
           spellCheck={true}
-          placeholder='Click “Cancel subscription”, confirm “Yes, cancel”, then verify “Subscription canceled” is shown…'
+          placeholder='Click "Cancel subscription", confirm "Yes, cancel", then verify "Subscription canceled" is shown…'
           className="field-input min-h-[8rem] resize-y"
         />
       </label>
@@ -62,7 +62,7 @@ export function RunForm({
           onChange={(e) => onUrlChange(e.target.value)}
           spellCheck={false}
           autoComplete="off"
-          placeholder="http://localhost:3000/demo/subscription…"
+          placeholder="http://localhost:3000/demo/subscription"
           className="field-input"
         />
       </label>
