@@ -96,11 +96,11 @@ export function LandingPage() {
               returns a verdict you can replay — not an unverified “done.”
             </p>
 
-            <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
-              <Link href="/app" className="btn-primary px-7 shadow-btn">
+            <div className="mt-8 flex w-full max-w-md flex-row flex-wrap items-center justify-center gap-3">
+              <Link href="/app" className="btn-primary min-w-[9.5rem] flex-1 px-7 shadow-btn sm:flex-none">
                 Open app
               </Link>
-              <a href="#demo" className="btn-secondary px-7">
+              <a href="#demo" className="btn-secondary min-w-[9.5rem] flex-1 px-7 sm:flex-none">
                 Watch the demo
               </a>
             </div>
