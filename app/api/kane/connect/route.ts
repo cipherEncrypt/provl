@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { runKaneBalance } from "@/lib/kane/balance";
+import { disableMachineDemo } from "@/lib/provl/demoSession";
 import { hasEncryptionKey } from "@/lib/provl/crypto";
 import {
   deleteKaneAccount,
@@ -42,6 +43,7 @@ export async function POST(req: Request) {
   }
 
   const sessionId = await ensureSessionId();
+  await disableMachineDemo();
   await saveKaneAccount(sessionId, username, accessKey, balance.availableCredits);
 
   return NextResponse.json({

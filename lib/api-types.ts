@@ -15,3 +15,19 @@ export type RunApiResponse = {
   proofUrl?: string;
   error?: string;
 };
+
+export type KaneAccountStatus = {
+  connected: boolean;
+  username: string | null;
+  availableCredits: number | null;
+  creditsSpentSession: number;
+  billingMode: "user" | "machine";
+  demoMode: boolean;
+};
+
+export type KaneConnectResponse = {
+  connected?: boolean;
+  username?: string;
+  availableCredits?: number;
+  error?: string;
+};
