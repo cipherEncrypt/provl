@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 const LINKS = [
   { href: "#how-it-works", label: "How it works" },
+  { href: "#get-started", label: "How to use" },
   { href: "#demo", label: "Demo" },
   { href: "#proof", label: "Proof" },
   {
@@ -56,7 +57,7 @@ export function LandingNav() {
         </Link>
 
         <nav
-          className="hidden items-center gap-6 text-sm text-steel-mute md:flex"
+          className="hidden items-center gap-5 text-sm text-steel-mute lg:flex xl:gap-6"
           aria-label="Primary"
         >
           {LINKS.map((link) =>
@@ -66,7 +67,7 @@ export function LandingNav() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+                className="rounded hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
               >
                 {link.label}
               </a>
@@ -74,7 +75,7 @@ export function LandingNav() {
               <a
                 key={link.href}
                 href={link.href}
-                className="hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+                className="rounded hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
               >
                 {link.label}
               </a>
@@ -92,7 +93,7 @@ export function LandingNav() {
 
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-btn border border-steel-line bg-paper text-ink md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-btn border border-steel-line bg-paper text-ink lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -114,7 +115,7 @@ export function LandingNav() {
       {open && (
         <div
           id="mobile-nav"
-          className="border-t border-steel-line bg-paper px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:hidden"
+          className="border-t border-steel-line bg-paper px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 lg:hidden"
           style={{ overscrollBehavior: "contain" }}
         >
           <nav className="flex flex-col gap-1 py-2" aria-label="Mobile">

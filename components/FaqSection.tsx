@@ -7,11 +7,11 @@ import { PillTag } from "./PillTag";
 const FAQS = [
   {
     q: "What does Provl prove?",
-    a: "A real browser run through Kane CLI, with a pass or fail verdict, readable proof fields, and a replay link — not an unverified “done.”",
+    a: "A real browser run through Kane CLI, with a pass or fail verdict, readable proof fields, and a replay link - not an unverified “done.”",
   },
   {
     q: "How long does a run take?",
-    a: "Usually 1–3 minutes. Kane opens Chrome, follows your objective, and stops only when the page matches what you asked to verify.",
+    a: "Usually 1-3 minutes. Kane opens Chrome, follows your objective, and stops only when the page matches what you asked to verify.",
   },
   {
     q: "What if the task cannot be finished?",

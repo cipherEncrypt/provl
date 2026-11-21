@@ -4,7 +4,7 @@ import type { KaneRunEnd } from "./types";
  * Whether to spend another Kane attempt after a non-passing run.
  *
  * Do NOT retry when Kane emitted run_end with status "failed" (e.g.
- * assertion_error.step_not_achievable) — that is an honest "can't be done."
+ * assertion_error.step_not_achievable) - that is an honest "can't be done."
  *
  * Retry only when the run did not produce a verdict: timeout (exit 3), or
  * no run_end (crash / truncated stream). Exit 2 without run_end is config/auth.

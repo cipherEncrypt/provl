@@ -26,7 +26,7 @@ npm install
 
 ### 2. Sign in to Kane (one time per machine)
 
-Provl runs Kane through `npx` — no global install required.
+Provl runs Kane through `npx` - no global install required.
 
 ```bash
 npx @testmuai/kane-cli login --oauth
@@ -61,18 +61,18 @@ Keep this terminal running. The **cancel subscription** demo talks to this same 
 
 ### 5. Try the two demo presets (one click each)
 
-On **/app**, use the two preset buttons. **Each run takes about 1–3 minutes** — wait for the loading state to finish.
+On **/app**, use the two preset buttons. **Each run takes about 1-3 minutes** - wait for the loading state to finish.
 
 | Button | Expected card | What Kane does |
 |--------|---------------|----------------|
 | **Demo: cancel subscription** | **DONE** | Opens the local sandbox at `/demo/subscription`, clicks cancel, confirms, and **verifies** “Subscription canceled” is shown. |
-| **Demo: honest NOT DONE** | **NOT DONE** | Opens [the-internet login](https://the-internet.herokuapp.com/login) and **verifies** a “Sign up with Google” button exists (it does not). Provl reports where it stopped — **no false success**, **one Kane attempt** (no credit-burning retries on honest failures). |
+| **Demo: honest NOT DONE** | **NOT DONE** | Opens [the-internet login](https://the-internet.herokuapp.com/login) and **verifies** a “Sign up with Google” button exists (it does not). Provl reports where it stopped - **no false success**, **one Kane attempt** (no credit-burning retries on honest failures). |
 
 Each finished run shows a **replay link** (Test Manager) and a **shareable proof page** link.
 
 ### 6. What Kane verifies (one line)
 
-**Kane drives real Chrome on your objective and returns pass or fail only when the page state matches what you asked it to verify** — Provl displays that verdict, the replay URL, and readable proof fields from Kane’s `run_end` event.
+**Kane drives real Chrome on your objective and returns pass or fail only when the page state matches what you asked it to verify** - Provl displays that verdict, the replay URL, and readable proof fields from Kane’s `run_end` event.
 
 ### Optional: CLI acceptance (no UI)
 
@@ -120,11 +120,11 @@ Docs:
 
 ## 4. The two phases
 
-### Phase A — The Build phase (the engine)
+### Phase A - The Build phase (the engine)
 
 Backend: run Kane, parse NDJSON, honest stop, selective retry. See `lib/kane/` and `npm run phase-a:acceptance`.
 
-### Phase B — The Live phase (what the user sees)
+### Phase B - The Live phase (what the user sees)
 
 Next.js UI at `/`: input, loading state, result card, shareable `/proof/[id]`.
 
@@ -169,7 +169,7 @@ npm run phase-a:acceptance       # cancel flow on local demo (dev server require
 
 ## 8. Demo and submission
 
-- **Video:** preset **DONE**, then preset **NOT DONE** (~3–5 minutes including wait time).
+- **Video:** preset **DONE**, then preset **NOT DONE** (~3-5 minutes including wait time).
 - **Repo:** public GitHub, this README, TestMu Kane login for judges (or document fallback recording).
 - **Deadline:** Nov 26.
 

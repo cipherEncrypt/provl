@@ -1,4 +1,4 @@
-/** Monochrome “built with” marks — geometric only */
+/** Monochrome “built with” marks - geometric only */
 export function TrustRow() {
   const items = [
     { name: "Kane CLI", mark: "K" },

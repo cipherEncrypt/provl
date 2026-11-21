@@ -14,7 +14,7 @@ export function RunLoading() {
           Running in a real browser…
         </p>
         <p className="max-w-sm text-sm leading-relaxed text-steel">
-          Kane is driving Chrome on your task. This usually takes 1–3 minutes.
+          Kane is driving Chrome on your task. This usually takes 1-3 minutes.
           Stay on this page.
         </p>
       </div>

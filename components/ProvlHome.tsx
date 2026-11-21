@@ -74,7 +74,7 @@ export function ProvlHome() {
 
           <p className="mt-3 max-w-md text-pretty text-[15px] leading-relaxed text-steel sm:mt-4 sm:text-lg">
             Tell Provl a web task in plain English. It runs in a real browser and
-            returns a verdict you can replay — not an unverified “done.”
+            returns a verdict you can replay - not an unverified “done.”
           </p>
 
           <div className="mt-7 w-full text-left sm:mt-10">

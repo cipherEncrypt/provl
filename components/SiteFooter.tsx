@@ -86,7 +86,7 @@ export function SiteFooter() {
         <div>
           <p className="text-sm font-semibold text-ink">Demo</p>
           <p className="mt-3 text-sm leading-relaxed text-steel">
-            Runs take 1–3 minutes. Keep the tab open while Kane drives Chrome.
+            Runs take 1-3 minutes. Keep the tab open while Kane drives Chrome.
           </p>
         </div>
       </div>

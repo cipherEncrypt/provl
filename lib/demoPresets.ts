@@ -22,7 +22,7 @@ export const DEMO_PRESETS: DemoPreset[] = [
     id: "honest-fail",
     label: "Demo: honest NOT DONE",
     description:
-      "Asks for a control that does not exist — should fail honestly with one attempt.",
+      "Asks for a control that does not exist - should fail honestly with one attempt.",
     task: 'Verify a "Sign up with Google" button is visible on the login page.',
     url: "https://the-internet.herokuapp.com/login",
     expect: "not-done",

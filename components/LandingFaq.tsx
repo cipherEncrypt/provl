@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import { PillTag } from "./PillTag";
@@ -8,19 +7,19 @@ import { PillTag } from "./PillTag";
 const FAQS = [
   {
     q: "What is Provl?",
-    a: "Provl is a consumer product around Kane CLI. You describe a web chore in plain English; Provl runs it in a real browser and returns a proof card — done or not done — with a replay link.",
+    a: "Provl is a consumer product built around Kane CLI. You describe a web chore in plain English; Provl runs it in a real browser and returns a proof card — done or not done — with a replay link.",
   },
   {
     q: "How does it verify?",
-    a: "Kane drives Chrome against your objective and ends with a run_end event. Provl treats the task as DONE only when status is passed and the process exit code is 0. The card shows summary, proof fields, and the Test Manager replay URL.",
+    a: "Provl hands your task to Kane CLI, which drives a real Chrome browser to complete it, then checks the outcome on the live page. Provl only shows DONE when Kane returns a pass verdict and exit code 0. Everything on the result card — the summary, the proof fields, the replay link — comes straight from that real run.",
   },
   {
     q: "Can it fail honestly?",
-    a: "Yes. If the page cannot satisfy the objective, Provl returns NOT DONE and shows where it stopped. Honest assertion failures are not retried, so credits are not burned on impossible goals.",
+    a: "Yes, and that's the point. If the task can't be completed, Provl shows NOT DONE and tells you exactly where it stopped, instead of pretending it worked. It doesn't waste retries on an impossible task, and it never claims a success it can't prove.",
   },
   {
     q: "What is Kane CLI?",
-    a: "Kane CLI is TestMu AI’s agent that runs plain-English browser objectives and returns evidence-backed pass/fail. Provl shells out to it via npx — no global install required after OAuth login.",
+    a: "Kane CLI, by TestMu AI, is a browser agent that takes a plain-English goal, drives a real browser, and returns a pass or fail backed by evidence and a shareable replay. It's the engine underneath Provl — the part that proves the task actually happened.",
   },
 ];
 
@@ -30,19 +29,13 @@ export function LandingFaq() {
   return (
     <section
       id="faq"
-      className="mx-auto grid w-full max-w-5xl scroll-mt-24 gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16"
+      className="mx-auto grid w-full max-w-5xl scroll-mt-20 gap-10 px-4 py-12 sm:scroll-mt-24 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16"
     >
       <div>
         <PillTag label="Frequently asked questions" />
         <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight text-ink sm:mt-5 sm:text-4xl">
           Questions? We&apos;re here to assist.
         </h2>
-        <p className="mt-4 max-w-md text-pretty text-steel">
-          Landing pages never call Kane. Open the app when you want a real run.
-        </p>
-        <Link href="/app" className="btn-primary mt-6 w-full sm:w-auto">
-          Open app
-        </Link>
       </div>
 
       <div className="space-y-3">
