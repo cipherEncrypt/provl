@@ -19,10 +19,10 @@ export function ResultCard({
   const stateEntries = Object.entries(result.finalState ?? {});
 
   return (
-    <article className="surface-card w-full">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <article className="surface-card w-full !p-4 sm:!p-8">
+      <div className="flex flex-wrap items-end justify-between gap-3 sm:gap-4">
         <p
-          className={`text-4xl font-semibold tracking-tight sm:text-5xl ${
+          className={`text-3xl font-semibold tracking-tight sm:text-5xl ${
             result.done ? "text-ink" : "text-steel"
           }`}
           aria-label={result.done ? "Verdict: done" : "Verdict: not done"}
@@ -30,7 +30,7 @@ export function ResultCard({
           {result.done ? (
             "DONE"
           ) : (
-            <span className="inline-block rounded-btn border-2 border-steel-soft px-3 py-1 text-3xl text-steel-mute sm:text-4xl">
+            <span className="inline-block rounded-btn border-2 border-steel-soft px-2.5 py-1 text-2xl text-steel-mute sm:px-3 sm:text-4xl">
               NOT DONE
             </span>
           )}

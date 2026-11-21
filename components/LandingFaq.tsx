@@ -34,13 +34,13 @@ export function LandingFaq() {
     >
       <div>
         <PillTag label="Frequently asked questions" />
-        <h2 className="mt-5 text-balance text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+        <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight text-ink sm:mt-5 sm:text-4xl">
           Questions? We&apos;re here to assist.
         </h2>
         <p className="mt-4 max-w-md text-pretty text-steel">
           Landing pages never call Kane. Open the app when you want a real run.
         </p>
-        <Link href="/app" className="btn-primary mt-6">
+        <Link href="/app" className="btn-primary mt-6 w-full sm:w-auto">
           Open app
         </Link>
       </div>

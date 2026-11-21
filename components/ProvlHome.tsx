@@ -65,19 +65,19 @@ export function ProvlHome() {
       <SiteHeader />
 
       <main className="flex-1">
-        <section className="mx-auto flex w-full max-w-xl flex-col items-center px-4 pb-8 pt-10 text-center sm:px-6 sm:pt-16">
+        <section className="mx-auto flex w-full max-w-xl flex-col items-center px-4 pb-8 pt-6 text-center sm:px-6 sm:pt-16">
           <PillTag label="Verified by Kane CLI" />
 
-          <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl sm:leading-[1.08]">
+          <h1 className="mt-5 text-balance text-[1.85rem] font-semibold leading-[1.15] tracking-tight text-ink sm:mt-6 sm:text-5xl sm:leading-[1.08]">
             Get proof it was actually done.
           </h1>
 
-          <p className="mt-4 max-w-md text-pretty text-base leading-relaxed text-steel sm:text-lg">
+          <p className="mt-3 max-w-md text-pretty text-[15px] leading-relaxed text-steel sm:mt-4 sm:text-lg">
             Tell Provl a web task in plain English. It runs in a real browser and
             returns a verdict you can replay — not an unverified “done.”
           </p>
 
-          <div className="mt-10 w-full text-left">
+          <div className="mt-7 w-full text-left sm:mt-10">
             <RunForm
               disabled={loading}
               task={task}

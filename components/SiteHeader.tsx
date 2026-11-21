@@ -2,14 +2,14 @@ import Link from "next/link";
 
 export function SiteHeader() {
   return (
-    <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5 sm:px-6">
+    <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:py-5">
       <Link
         href="/"
-        className="flex items-center gap-2.5 text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded-btn"
+        className="flex min-w-0 items-center gap-2 text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded-btn"
         translate="no"
       >
         <span
-          className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-ink text-white"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-ink text-white"
           aria-hidden="true"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -21,23 +21,23 @@ export function SiteHeader() {
             />
           </svg>
         </span>
-        <span className="text-[17px] font-semibold tracking-tight">Provl</span>
+        <span className="truncate text-[17px] font-semibold tracking-tight">Provl</span>
       </Link>
 
-      <nav className="flex items-center gap-3 text-sm text-steel-mute sm:gap-5" aria-label="Primary">
+      <nav className="flex shrink-0 items-center gap-2 text-sm text-steel-mute sm:gap-5" aria-label="Primary">
         <Link
           href="/#how-it-works"
-          className="hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+          className="hidden hover:text-ink sm:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
         >
           How it works
         </Link>
         <Link
           href="/demo/subscription"
-          className="hidden hover:text-ink sm:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+          className="hidden hover:text-ink md:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
         >
           Sandbox
         </Link>
-        <Link href="/app" className="btn-primary !px-4 !py-2 text-xs sm:text-sm">
+        <Link href="/app" className="btn-primary !px-3.5 !py-2 text-xs sm:!px-4 sm:text-sm">
           Open app
         </Link>
       </nav>

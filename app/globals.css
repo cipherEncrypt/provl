@@ -35,6 +35,7 @@ body {
   color: var(--ink);
   background-color: var(--paper);
   min-height: 100dvh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -70,7 +71,7 @@ body {
 .hero-art-img {
   display: block;
   width: 100%;
-  max-height: min(58vh, 560px);
+  max-height: min(42vh, 320px);
   /* Soft vignette — dissolve into page white on all sides (no hard JPEG frame) */
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
@@ -82,9 +83,15 @@ body {
   mask-composite: intersect;
 }
 
+@media (min-width: 640px) {
+  .hero-art-img {
+    max-height: min(58vh, 560px);
+  }
+}
+
 @layer components {
   .pill-tag {
-    @apply inline-flex items-center gap-2 rounded-full border border-steel-line bg-paper px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink shadow-pill;
+    @apply inline-flex items-center gap-2 rounded-full border border-steel-line bg-paper px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink shadow-pill sm:px-3.5 sm:text-[11px];
   }
 
   .btn-primary {
@@ -96,7 +103,7 @@ body {
   }
 
   .surface-card {
-    @apply rounded-card border border-steel-line/80 bg-paper p-6 shadow-soft sm:p-8;
+    @apply rounded-card border border-steel-line/80 bg-paper p-5 shadow-soft sm:p-8;
   }
 
   .field-input {

@@ -24,10 +24,10 @@ export default async function ProofPage({ params }: PageProps) {
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
 
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-6 px-4 py-12 sm:px-6">
+      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-5 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:gap-6 sm:px-6 sm:py-12">
         <header className="space-y-3 text-center">
           <PillTag label="Verified by Kane CLI" />
-          <h1 className="text-balance text-3xl font-semibold tracking-tight text-ink">
+          <h1 className="text-balance text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
             Shared result
           </h1>
           <p className="text-sm text-steel">Task run on {when}</p>
