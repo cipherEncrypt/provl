@@ -59,7 +59,7 @@ export function LandingPage() {
 
             <div className="mt-7 flex w-full max-w-sm flex-col gap-3 sm:mt-8 sm:max-w-md sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
               <Link
-                href="/app"
+                href="/dashboard"
                 className="btn-primary w-full px-7 shadow-btn sm:w-auto sm:min-w-[9.5rem]"
               >
                 Open app
@@ -166,7 +166,7 @@ export function LandingPage() {
             ))}
           </ol>
           <div className="mt-8 flex justify-center">
-            <Link href="/app" className="btn-primary w-full sm:w-auto">
+            <Link href="/dashboard" className="btn-primary w-full sm:w-auto">
               Open app
             </Link>
           </div>
@@ -187,7 +187,7 @@ export function LandingPage() {
               (DONE), then the honest fail on a login page that has no Google
               button (NOT DONE). Each run takes about 1–3 minutes.
             </p>
-            <Link href="/app" className="btn-primary mt-6 w-full sm:w-auto">
+            <Link href="/dashboard" className="btn-primary mt-6 w-full sm:w-auto">
               Open app
             </Link>
           </div>
@@ -225,7 +225,7 @@ export function LandingPage() {
                 can replay.
               </p>
             </div>
-            <Link href="/app" className="btn-primary w-full shrink-0 sm:w-auto">
+            <Link href="/dashboard" className="btn-primary w-full shrink-0 sm:w-auto">
               Open app
             </Link>
           </div>
@@ -266,7 +266,7 @@ export function LandingPage() {
                 </a>
               </li>
               <li>
-                <Link href="/app" className="hover:text-ink">
+                <Link href="/dashboard" className="hover:text-ink">
                   Open app
                 </Link>
               </li>

@@ -85,7 +85,7 @@ export function LandingNav() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/app"
+            href="/dashboard"
             className="btn-primary !px-3.5 !py-2 text-xs sm:!px-4 sm:text-sm"
           >
             Open app
@@ -143,7 +143,7 @@ export function LandingNav() {
               ),
             )}
             <Link
-              href="/app"
+              href="/dashboard"
               className="btn-primary mt-2 w-full"
               onClick={() => setOpen(false)}
             >

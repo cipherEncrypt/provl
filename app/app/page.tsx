@@ -1,5 +1,5 @@
-import { ProvlHome } from "@/components/ProvlHome";
+import { redirect } from "next/navigation";
 
-export default function AppPage() {
-  return <ProvlHome />;
+export default function LegacyAppPage() {
+  redirect("/dashboard");
 }
