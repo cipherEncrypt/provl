@@ -1,5 +1,6 @@
 import type { RunApiResponse } from "@/lib/api-types";
 import { formatDuration, humanizeKey } from "@/lib/format";
+import type { HonestStop } from "@/lib/kane/types";
 import type { ProofRecord } from "@/lib/proof/types";
 
 type ResultCardProps = {
@@ -8,6 +9,28 @@ type ResultCardProps = {
   showShareHint?: boolean;
 };
 
+/** Step + reason only — never re-print the top summary. */
+function honestStopDetail(stop: HonestStop): string | null {
+  const lines: string[] = [];
+  if (stop.failedStepRemark) {
+    lines.push(`Stopped at: ${stop.failedStepRemark}`);
+  }
+  if (stop.reason) {
+    lines.push(stop.reason);
+  }
+  if (lines.length > 0) return lines.join("\n");
+
+  // Older payloads: pull step lines out of the combined message
+  const fromMessage = (stop.message || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(
+      (line) =>
+        /^Stopped at:/i.test(line) || /^Final verification failed/i.test(line),
+    );
+  return fromMessage.length > 0 ? fromMessage.join("\n") : null;
+}
+
 export function ResultCard({
   result,
   proofUrl,
@@ -15,6 +38,10 @@ export function ResultCard({
 }: ResultCardProps) {
   const durationLabel = formatDuration(result.duration);
   const stateEntries = Object.entries(result.finalState ?? {});
+  const stopDetail =
+    !result.done && result.honestStop
+      ? honestStopDetail(result.honestStop)
+      : null;
 
   return (
     <article className="surface-card w-full !p-4 sm:!p-8">
@@ -52,13 +79,13 @@ export function ResultCard({
         </p>
       )}
 
-      {!result.done && result.honestStop && (
+      {stopDetail && (
         <div className="mt-5 rounded-card border border-steel-line bg-mist/80 px-4 py-4">
           <p className="text-xs font-semibold tracking-wide text-steel-mute">
             Where it stopped
           </p>
           <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-ink/80">
-            {result.honestStop.message}
+            {stopDetail}
           </p>
         </div>
       )}
