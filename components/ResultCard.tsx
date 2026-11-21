@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import type { RunApiResponse } from "@/lib/api-types";
 import { formatDuration, humanizeKey } from "@/lib/format";
 import type { ProofRecord } from "@/lib/proof/types";
@@ -87,13 +85,22 @@ export function ResultCard({
       )}
 
       <footer className="mt-6 flex flex-col gap-3 border-t border-steel-line pt-5">
-        {result.creditsConsumed != null && (
+        {(result.creditsConsumed != null || result.attempts > 0) && (
           <p className="text-sm text-steel-soft">
-            Credits used:{" "}
-            <span className="tabular-nums">
-              {result.creditsConsumed.toFixed(1)}
-            </span>
-            {result.attempts > 1 ? ` · ${result.attempts} attempts` : null}
+            {result.creditsConsumed != null && (
+              <>
+                Credits used:{" "}
+                <span className="tabular-nums">
+                  {result.creditsConsumed.toFixed(1)}
+                </span>
+              </>
+            )}
+            {result.attempts > 0 && (
+              <>
+                {result.creditsConsumed != null ? " · " : null}
+                {result.attempts} attempt{result.attempts === 1 ? "" : "s"}
+              </>
+            )}
           </p>
         )}
 
@@ -113,9 +120,9 @@ export function ResultCard({
             <p className="text-xs font-semibold tracking-wide text-steel-soft">
               Share proof
             </p>
-            <Link href={proofUrl} className="btn-secondary mt-3 w-full sm:w-auto">
+            <a href={proofUrl} className="btn-secondary mt-3 inline-flex w-full sm:w-auto">
               Open shareable proof page
-            </Link>
+            </a>
           </div>
         )}
       </footer>
