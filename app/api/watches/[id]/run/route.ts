@@ -24,7 +24,7 @@ export async function POST(_req: Request, context: RouteContext) {
     return NextResponse.json({ error: "Monitor not found" }, { status: 404 });
   }
 
-  const { watch: updated, result } = await runWatchJob(watch);
+  const { watch: updated, result, alert } = await runWatchJob(watch);
 
   return NextResponse.json(
     {
@@ -38,6 +38,13 @@ export async function POST(_req: Request, context: RouteContext) {
         summary: result.summary,
         honestStop: result.honestStop,
       },
+      alert: alert
+        ? {
+            sent: alert.sent,
+            detail:
+              "detail" in alert && alert.detail ? alert.detail : undefined,
+          }
+        : null,
     },
     { status: result.done ? 200 : 422 },
   );

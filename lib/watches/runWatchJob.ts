@@ -24,7 +24,7 @@ export async function runWatchJob(watch: WatchRecord) {
     lastProofId: result.proofId,
   });
 
-  await notifyWatchFailureIfNeeded(updated, result);
+  const alert = await notifyWatchFailureIfNeeded(updated, result);
 
-  return { watch: updated, result };
+  return { watch: updated, result, alert };
 }

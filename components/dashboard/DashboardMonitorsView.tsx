@@ -122,17 +122,28 @@ export function DashboardMonitorsView() {
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
         run?: { done?: boolean; proofUrl?: string };
+        alert?: { sent?: boolean; detail?: string } | null;
       };
       if (data.error && !data.run) {
         setError(data.error);
         return;
       }
       const done = Boolean(data.run?.done);
-      setRunNotice(
-        done
-          ? "Run finished: DONE. Proof is ready."
-          : "Run finished: NOT DONE. Proof saved; alert email sends when Resend is configured.",
-      );
+      if (done) {
+        setRunNotice("Run finished: DONE. Proof is ready.");
+      } else if (data.alert?.sent) {
+        setRunNotice(
+          "Run finished: NOT DONE. Proof saved and we sent an alert email.",
+        );
+      } else if (data.alert?.detail) {
+        setRunNotice(
+          `Run finished: NOT DONE. Proof saved. Email not sent: ${data.alert.detail}`,
+        );
+      } else {
+        setRunNotice(
+          "Run finished: NOT DONE. Proof saved (no alert email configured).",
+        );
+      }
       await loadWatches();
       window.dispatchEvent(new Event("provl:account-refresh"));
     } catch {
