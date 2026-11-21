@@ -6,6 +6,7 @@ import {
   getKaneAccount,
 } from "@/lib/provl/kaneAccountStore";
 import { ensureSessionId, getSessionId } from "@/lib/provl/session";
+import { appendRunHistory } from "@/lib/proof/historyStore";
 import { saveProof } from "@/lib/proof/store";
 
 export const maxDuration = 600;
@@ -59,6 +60,17 @@ export async function POST(req: Request) {
     creditsConsumed: result.creditsConsumed,
     honestStop: result.honestStop,
     attempts: result.attempts,
+  });
+
+  await appendRunHistory({
+    sessionId,
+    proofId: proof.id,
+    task,
+    url,
+    done: proof.done,
+    creditsConsumed: proof.creditsConsumed,
+    durationSec: proof.duration,
+    createdAt: proof.createdAt,
   });
 
   const proofUrl = `/proof/${proof.id}`;
