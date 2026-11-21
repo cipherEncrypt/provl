@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { runKaneWithRetry } from "@/lib/kane/runWithRetry";
+import {
+  addSessionCredits,
+  getKaneAccount,
+} from "@/lib/provl/kaneAccountStore";
+import { getSessionId } from "@/lib/provl/session";
 import { saveProof } from "@/lib/proof/store";
 
 export const maxDuration = 600;
@@ -20,7 +25,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "task is required" }, { status: 400 });
   }
 
-  const result = await runKaneWithRetry({ task, url });
+  const sessionId = await getSessionId();
+  const connected = sessionId ? await getKaneAccount(sessionId) : null;
+
+  const result = await runKaneWithRetry({
+    task,
+    url,
+    ...(connected
+      ? {
+          basicAuth: {
+            username: connected.username,
+            accessKey: connected.accessKey,
+          },
+        }
+      : {}),
+  });
+
+  if (sessionId && connected && result.creditsConsumed != null) {
+    await addSessionCredits(sessionId, result.creditsConsumed);
+  }
 
   const proof = await saveProof({
     task,

@@ -56,4 +56,6 @@ export type RunKaneOptions = {
   url?: string;
   headless?: boolean;
   timeoutSeconds?: number;
+  /** When set, Kane bills this account (per-run --username / --access-key). */
+  basicAuth?: { username: string; accessKey: string };
 };

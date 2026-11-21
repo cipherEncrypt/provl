@@ -28,11 +28,15 @@ export function runKane(options: RunKaneOptions): Promise<KaneProcessResult> {
   if (headless) args.push("--headless");
   if (url) args.push("--url", url);
 
-  const username = process.env.LT_USERNAME;
-  const accessKey = process.env.LT_ACCESS_KEY;
-  if (username && accessKey) {
-    args.push("--username", username, "--access-key", accessKey);
+  if (options.basicAuth) {
+    args.push(
+      "--username",
+      options.basicAuth.username,
+      "--access-key",
+      options.basicAuth.accessKey,
+    );
   }
+  // else: no auth flags — Kane CLI uses this machine's ~/.testmuai profile (demo fallback).
 
   return new Promise((resolve, reject) => {
     const child = spawn("npx", args, {
