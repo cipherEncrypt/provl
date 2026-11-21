@@ -109,16 +109,11 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-height: min(42vh, 320px);
-  object-fit: cover;
+  height: auto;
+  /* contain — never crop the baked white side fades (cover was cutting them off) */
+  object-fit: contain;
   object-position: center center;
   background: #ffffff;
-}
-
-@media (min-width: 640px) {
-  .hero-art-img {
-    max-height: min(58vh, 560px);
-  }
 }
 
 @layer components {
