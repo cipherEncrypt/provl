@@ -1,5 +1,5 @@
-import { ProvlHome } from "@/components/ProvlHome";
+import { LandingPage } from "@/components/LandingPage";
 
 export default function Home() {
-  return <ProvlHome />;
+  return <LandingPage />;
 }

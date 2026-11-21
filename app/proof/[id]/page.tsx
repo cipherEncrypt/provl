@@ -47,7 +47,7 @@ export default async function ProofPage({ params }: PageProps) {
 
         <p className="text-center text-sm text-steel">
           <Link
-            href="/"
+            href="/app"
             className="font-medium text-ink underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
           >
             Run another task

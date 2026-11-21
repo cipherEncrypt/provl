@@ -55,13 +55,13 @@ Leave `.env` empty if you use OAuth above. Only set `LT_USERNAME` / `LT_ACCESS_K
 npm run dev
 ```
 
-Open **http://localhost:3000** (use another port with `PORT=3001 npm run dev` if 3000 is busy).
+Open **http://localhost:3000** for the landing page, then **http://localhost:3000/app** for the task app (use another port with `PORT=3001 npm run dev` if 3000 is busy).
 
 Keep this terminal running. The **cancel subscription** demo talks to this same server.
 
 ### 5. Try the two demo presets (one click each)
 
-On the home screen, use the two preset buttons. **Each run takes about 1–3 minutes** — wait for the loading state to finish.
+On **/app**, use the two preset buttons. **Each run takes about 1–3 minutes** — wait for the loading state to finish.
 
 | Button | Expected card | What Kane does |
 |--------|---------------|----------------|

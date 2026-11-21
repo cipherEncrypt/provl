@@ -25,20 +25,20 @@ export function SiteHeader() {
       </Link>
 
       <nav className="flex items-center gap-3 text-sm text-steel-mute sm:gap-5" aria-label="Primary">
-        <a
-          href="#how-it-works"
+        <Link
+          href="/#how-it-works"
           className="hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
         >
           How it works
-        </a>
-        <a
-          href="#faq"
-          className="hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
+        </Link>
+        <Link
+          href="/demo/subscription"
+          className="hidden hover:text-ink sm:inline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded"
         >
-          FAQ
-        </a>
-        <Link href="/demo/subscription" className="btn-primary !px-4 !py-2 text-xs sm:text-sm">
-          Open sandbox
+          Sandbox
+        </Link>
+        <Link href="/app" className="btn-primary !px-4 !py-2 text-xs sm:text-sm">
+          Open app
         </Link>
       </nav>
     </header>
