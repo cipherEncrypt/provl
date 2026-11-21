@@ -5,10 +5,11 @@
 :root {
   color-scheme: light;
   --ink: #0a0a0a;
-  --mist: #f4f4f5;
+  --mist: #f7f7f8;
   --paper: #ffffff;
   --steel: #71717a;
   --line: #e4e4e7;
+  --wave: #d4d4d8;
 }
 
 html {
@@ -32,25 +33,32 @@ html {
 body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   color: var(--ink);
-  background-color: var(--mist);
-  background-image:
-    radial-gradient(ellipse 80% 55% at 50% 0%, #ffffff 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, #ffffff 0%, transparent 65%);
-  background-attachment: fixed;
+  background-color: var(--paper);
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-/* Soft topographic lines — geometric depth, no stock imagery */
+/*
+  Concentric topographic waves — matches the clean Axonix-style hero background.
+  Soft radial glow in the center, thin grey arcs fading outward.
+*/
 .topo-bg {
-  background-color: #f4f4f5;
+  background-color: var(--paper);
   background-image:
-    radial-gradient(ellipse 70% 50% at 50% 18%, #ffffff 0%, transparent 60%),
-    url("data:image/svg+xml,%3Csvg width='1200' height='800' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 120 Q300 80 600 140 T1200 100' fill='none' stroke='%23e4e4e7' stroke-width='1'/%3E%3Cpath d='M0 220 Q350 180 700 240 T1200 200' fill='none' stroke='%23e8e8ea' stroke-width='1'/%3E%3Cpath d='M0 340 Q280 300 560 360 T1200 320' fill='none' stroke='%23e4e4e7' stroke-width='1'/%3E%3Cpath d='M0 460 Q400 420 800 480 T1200 440' fill='none' stroke='%23ebebed' stroke-width='1'/%3E%3Cpath d='M0 580 Q320 540 640 600 T1200 560' fill='none' stroke='%23e4e4e7' stroke-width='1'/%3E%3Cpath d='M0 700 Q360 660 720 720 T1200 680' fill='none' stroke='%23ebebed' stroke-width='1'/%3E%3C/svg%3E");
+    radial-gradient(ellipse 70% 55% at 50% 42%, #ffffff 0%, transparent 65%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'%3E%3Cg fill='none' stroke='%23d4d4d8' stroke-width='1' opacity='0.55'%3E%3Cellipse cx='800' cy='420' rx='180' ry='70'/%3E%3Cellipse cx='800' cy='420' rx='280' ry='110'/%3E%3Cellipse cx='800' cy='420' rx='400' ry='160'/%3E%3Cellipse cx='800' cy='420' rx='540' ry='220'/%3E%3Cellipse cx='800' cy='420' rx='700' ry='290'/%3E%3Cellipse cx='800' cy='420' rx='880' ry='370'/%3E%3Cellipse cx='800' cy='420' rx='1080' ry='460'/%3E%3C/g%3E%3Cg fill='none' stroke='%23e4e4e7' stroke-width='1' opacity='0.7'%3E%3Cpath d='M-40 180 Q400 120 800 200 T1640 160'/%3E%3Cpath d='M-40 260 Q420 200 820 280 T1640 240'/%3E%3Cpath d='M-40 560 Q380 620 800 540 T1640 600'/%3E%3Cpath d='M-40 640 Q420 700 820 620 T1640 680'/%3E%3Cpath d='M-40 720 Q400 780 800 700 T1640 760'/%3E%3C/g%3E%3C/svg%3E");
   background-size: cover, 100% auto;
-  background-position: center top, center bottom;
+  background-position: center, center top;
+  background-repeat: no-repeat;
+}
+
+.hero-waves {
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='700' viewBox='0 0 1600 700'%3E%3Cg fill='none' stroke='%23cfcfd4' stroke-width='1' opacity='0.5'%3E%3Cellipse cx='800' cy='340' rx='160' ry='55'/%3E%3Cellipse cx='800' cy='340' rx='250' ry='90'/%3E%3Cellipse cx='800' cy='340' rx='360' ry='130'/%3E%3Cellipse cx='800' cy='340' rx='490' ry='180'/%3E%3Cellipse cx='800' cy='340' rx='640' ry='240'/%3E%3Cellipse cx='800' cy='340' rx='820' ry='310'/%3E%3Cellipse cx='800' cy='340' rx='1020' ry='390'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 120% auto;
+  background-position: center 40%;
   background-repeat: no-repeat;
 }
 

@@ -1,4 +1,9 @@
-Source: https://www.pexels.com/photo/black-and-white-photo-of-human-hand-and-robot-hand-8386422/
-Photographer: Tara Winstead
-License: Pexels License (free for commercial and non-commercial use; no permission required; attribution appreciated but not required)
-Downloaded: 2026-11-21
+Hero visual: public/hero.jpg
+Source file: public/hero-source.png (design reference provided for Provl)
+
+Cropped from the project design reference screenshot (robot hand meeting human
+hand with topographic wave background). Original chrome (“Book a Demo”,
+“Trusted by…”) removed so Provl’s own CTAs can sit above the art.
+
+If you replace this asset later, prefer a royalty-free photo (e.g. Pexels /
+Unsplash) or an original render, and update this file.

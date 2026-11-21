@@ -82,57 +82,46 @@ export function LandingPage() {
       </header>
 
       <main id="main">
-        {/* Hero */}
-        <section className="mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-6 pt-14 text-center sm:px-6 sm:pt-20">
-          <PillTag label="Verified by Kane CLI" />
+        {/* Hero — matches reference: CTAs over concentric waves + hands */}
+        <section className="hero-waves relative overflow-hidden px-4 pb-10 pt-14 text-center sm:px-6 sm:pb-14 sm:pt-16">
+          <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center">
+            <PillTag label="Verified by Kane CLI" />
 
-          <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem]">
-            Get proof it was actually done.
-          </h1>
+            <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl sm:leading-[1.08] lg:text-[3.5rem]">
+              Get proof it was actually done.
+            </h1>
 
-          <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-steel sm:text-lg">
-            Tell Provl a web task in plain English. It runs in a real browser and
-            returns a verdict you can replay — not an unverified “done.”
-          </p>
+            <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-steel sm:text-lg">
+              Tell Provl a web task in plain English. It runs in a real browser and
+              returns a verdict you can replay — not an unverified “done.”
+            </p>
 
-          <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
-            <Link href="/app" className="btn-primary px-7">
-              Open app
-            </Link>
-            <a href="#demo" className="btn-secondary px-7">
-              Watch the demo
-            </a>
+            <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
+              <Link href="/app" className="btn-primary px-7 shadow-btn">
+                Open app
+              </Link>
+              <a href="#demo" className="btn-secondary px-7">
+                Watch the demo
+              </a>
+            </div>
           </div>
-        </section>
 
-        {/* Hero image */}
-        <div className="relative mx-auto mt-4 w-full max-w-5xl px-4 sm:px-6">
-          <div
-            className="pointer-events-none absolute inset-0 -z-10 mx-auto max-w-4xl bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.95)_0%,_transparent_70%)]"
-            aria-hidden="true"
-          />
-          <div className="overflow-hidden rounded-card border border-steel-line/60 shadow-soft">
+          <div className="relative z-10 mx-auto mt-6 w-full max-w-5xl sm:mt-2">
             <Image
               src="/hero.jpg"
-              alt="Grayscale photograph of a human hand and a robotic hand reaching toward each other"
-              width={2400}
-              height={1600}
+              alt="Robot hand and human hand reaching toward each other on a soft topographic wave background"
+              width={1024}
+              height={374}
               priority
-              className="h-auto w-full object-cover grayscale"
+              className="mx-auto h-auto w-full max-w-5xl object-contain object-center"
               sizes="(max-width: 1024px) 100vw, 1024px"
             />
           </div>
-          <p className="mt-3 text-center text-[11px] text-steel-soft">
-            Photo: Tara Winstead / Pexels (free license)
-          </p>
-        </div>
 
-        {/* Powered by strip */}
-        <section className="mx-auto w-full max-w-4xl px-4 py-14 text-center sm:px-6">
-          <p className="text-xs font-medium uppercase tracking-[0.12em] text-steel-soft">
+          <p className="relative z-10 mt-6 text-xs font-medium tracking-wide text-steel sm:mt-8">
             Powered by Kane CLI · Works with Claude Code, Cursor, Codex
           </p>
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+          <ul className="relative z-10 mt-5 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
             {["Kane CLI", "Claude Code", "Cursor", "Codex"].map((name) => (
               <li
                 key={name}
