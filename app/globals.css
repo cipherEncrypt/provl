@@ -79,7 +79,7 @@ body {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: min(28vw, 220px);
+  width: min(42vw, 320px);
   z-index: 2;
   pointer-events: none;
 }
@@ -89,7 +89,7 @@ body {
   background: linear-gradient(
     to right,
     #ffffff 0%,
-    #ffffff 35%,
+    #ffffff 45%,
     rgba(255, 255, 255, 0) 100%
   );
 }
@@ -99,7 +99,7 @@ body {
   background: linear-gradient(
     to left,
     #ffffff 0%,
-    #ffffff 35%,
+    #ffffff 45%,
     rgba(255, 255, 255, 0) 100%
   );
 }

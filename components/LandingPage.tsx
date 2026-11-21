@@ -58,10 +58,10 @@ export function LandingPage() {
 
           <div className="hero-art-flow z-0 mt-4 w-screen max-w-none left-1/2 -translate-x-1/2 sm:mt-0">
             <Image
-              src="/hero.jpg"
+              src="/hero.png"
               alt="Robot hand and human hand reaching toward each other"
-              width={1392}
-              height={451}
+              width={1474}
+              height={465}
               priority
               sizes="100vw"
               className="hero-art-img h-auto w-full select-none"
