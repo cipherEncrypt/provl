@@ -13,17 +13,20 @@
     "kane:run": "tsx scripts/run-task.ts",
     "phase-a:parse-fixtures": "tsx scripts/verify-parser-fixtures.ts",
     "phase-a:retry-policy": "tsx scripts/verify-retry-policy.ts",
-    "phase-a:acceptance": "tsx scripts/acceptance-cancel.ts"
+    "phase-a:acceptance": "tsx scripts/acceptance-cancel.ts",
+    "cron:dev": "tsx scripts/dev-cron.ts"
   },
   "dependencies": {
     "geist": "^1.9.2",
     "mongodb": "^6.22.0",
+    "node-cron": "^4.2.1",
     "next": "^15.5.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.18.6",
+    "@types/node-cron": "^3.0.11",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "postcss": "^8.5.6",

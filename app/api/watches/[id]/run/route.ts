@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { executeRunAndSaveProof } from "@/lib/provl/executeRunAndSaveProof";
 import { getKaneAccount } from "@/lib/provl/kaneAccountStore";
 import { ensureSessionId } from "@/lib/provl/session";
+import { runWatchJob } from "@/lib/watches/runWatchJob";
 import {
   getWatch,
-  recordWatchRun,
   watchOwnedBySession,
 } from "@/lib/watches/watchStore";
 
@@ -24,18 +23,7 @@ export async function POST(_req: Request, context: RouteContext) {
     return NextResponse.json({ error: "Monitor not found" }, { status: 404 });
   }
 
-  const result = await executeRunAndSaveProof({
-    sessionId: watch.sessionId,
-    task: watch.task,
-    url: watch.url,
-  });
-
-  const ranAt = new Date().toISOString();
-  const updated = await recordWatchRun(watch, {
-    lastStatus: result.done ? "done" : "not_done",
-    lastRunAt: ranAt,
-    lastProofId: result.proofId,
-  });
+  const { watch: updated, result } = await runWatchJob(watch);
 
   return NextResponse.json(
     {
