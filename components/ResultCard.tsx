@@ -1,5 +1,6 @@
 import type { RunApiResponse } from "@/lib/api-types";
 import { formatDuration, humanizeKey } from "@/lib/format";
+import { LOGIN_SECRETS_HINT } from "@/lib/run/loginHints";
 import type { HonestStop } from "@/lib/kane/types";
 import type { ProofRecord } from "@/lib/proof/types";
 
@@ -7,6 +8,7 @@ type ResultCardProps = {
   result: RunApiResponse | ProofRecord;
   proofUrl?: string | null;
   showShareHint?: boolean;
+  loginSecretsHint?: boolean;
 };
 
 /** Step + reason only — never re-print the top summary. */
@@ -35,6 +37,7 @@ export function ResultCard({
   result,
   proofUrl,
   showShareHint = true,
+  loginSecretsHint = false,
 }: ResultCardProps) {
   const durationLabel = formatDuration(result.duration);
   const stateEntries = Object.entries(result.finalState ?? {});
@@ -76,6 +79,15 @@ export function ResultCard({
       {result.summary && (
         <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-steel">
           {result.summary}
+        </p>
+      )}
+
+      {loginSecretsHint && !result.done && (
+        <p
+          className="mt-5 rounded-card border border-steel-line bg-mist px-4 py-3 text-sm leading-relaxed text-ink"
+          role="status"
+        >
+          {LOGIN_SECRETS_HINT}
         </p>
       )}
 

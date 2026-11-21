@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { taskSuggestsLogin } from "@/lib/run/loginHints";
+
 import {
   RunSecretsEditor,
   type SecretRow,
@@ -29,7 +31,9 @@ export function RunForm({
   onSubmit,
 }: RunFormProps) {
   const [secretRows, setSecretRows] = useState<SecretRow[]>([]);
-  const [showSecrets, setShowSecrets] = useState(false);
+  const [needsLoginToggle, setNeedsLoginToggle] = useState(false);
+
+  const secretsVisible = taskSuggestsLogin(task) || needsLoginToggle;
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -82,16 +86,18 @@ export function RunForm({
         />
       </label>
 
-      {!showSecrets ? (
-        <button
-          type="button"
+      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-steel">
+        <input
+          type="checkbox"
           disabled={disabled}
-          onClick={() => setShowSecrets(true)}
-          className="text-left text-sm font-medium text-steel underline decoration-steel-line underline-offset-2 hover:text-ink"
-        >
-          Add secrets (optional)
-        </button>
-      ) : (
+          checked={needsLoginToggle}
+          onChange={(e) => setNeedsLoginToggle(e.target.checked)}
+          className="size-4 shrink-0 rounded border-steel-line accent-ink"
+        />
+        <span>This task needs a login</span>
+      </label>
+
+      {secretsVisible && (
         <RunSecretsEditor
           disabled={disabled}
           rows={secretRows}

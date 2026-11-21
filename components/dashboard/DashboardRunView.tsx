@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import type { RunApiResponse } from "@/lib/api-types";
+import { shouldShowLoginSecretsHint } from "@/lib/run/loginHints";
 
 import { DemoPresets } from "../DemoPresets";
 import { ResultCard } from "../ResultCard";
@@ -16,6 +17,7 @@ export function DashboardRunView() {
   const [result, setResult] = useState<RunApiResponse | null>(null);
   const [task, setTask] = useState("");
   const [url, setUrl] = useState("");
+  const [loginSecretsHint, setLoginSecretsHint] = useState(false);
 
   async function runTask(
     runTaskText: string,
@@ -27,6 +29,7 @@ export function DashboardRunView() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setLoginSecretsHint(false);
 
     try {
       const res = await fetch("/api/kane/run", {
@@ -49,6 +52,9 @@ export function DashboardRunView() {
         return;
       }
       setResult(data);
+      setLoginSecretsHint(
+        shouldShowLoginSecretsHint(runTaskText, secrets.length, data),
+      );
       window.dispatchEvent(new Event("provl:account-refresh"));
     } catch {
       setError("Could not reach the server. Is npm run dev running?");
@@ -102,6 +108,7 @@ export function DashboardRunView() {
               result={result}
               proofUrl={result.proofUrl ?? null}
               showShareHint={Boolean(result.proofUrl)}
+              loginSecretsHint={loginSecretsHint}
             />
           )}
         </div>
