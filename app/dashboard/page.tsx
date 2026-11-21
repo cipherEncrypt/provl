@@ -1,5 +1,5 @@
-import { DashboardPage } from "@/components/DashboardPage";
+import { DashboardRunView } from "@/components/dashboard/DashboardRunView";
 
-export default function DashboardRoute() {
-  return <DashboardPage />;
+export default function DashboardRunPage() {
+  return <DashboardRunView />;
 }
