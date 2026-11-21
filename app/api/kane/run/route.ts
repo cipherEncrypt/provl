@@ -5,7 +5,7 @@ import {
   addSessionCredits,
   getKaneAccount,
 } from "@/lib/provl/kaneAccountStore";
-import { getSessionId } from "@/lib/provl/session";
+import { ensureSessionId, getSessionId } from "@/lib/provl/session";
 import { saveProof } from "@/lib/proof/store";
 
 export const maxDuration = 600;
@@ -25,8 +25,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "task is required" }, { status: 400 });
   }
 
-  const sessionId = await getSessionId();
-  const connected = sessionId ? await getKaneAccount(sessionId) : null;
+  const sessionId = await ensureSessionId();
+  const connected = await getKaneAccount(sessionId);
 
   const result = await runKaneWithRetry({
     task,
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
   }
 
   const proof = await saveProof({
+    sessionId,
     task,
     url,
     done: result.done,

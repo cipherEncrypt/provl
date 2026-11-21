@@ -3,6 +3,8 @@ import type { HonestStop } from "@/lib/kane/types";
 export type ProofRecord = {
   id: string;
   createdAt: string;
+  /** Browser session that created this proof (provl_sid cookie). */
+  sessionId?: string;
   task: string;
   url?: string;
   done: boolean;

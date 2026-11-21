@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import type { ProofRecord } from "./types";
@@ -34,4 +34,47 @@ export async function getProof(id: string): Promise<ProofRecord | null> {
   } catch {
     return null;
   }
+}
+
+export type ProofHistoryItem = Pick<
+  ProofRecord,
+  "id" | "createdAt" | "task" | "done" | "creditsConsumed"
+>;
+
+export async function listProofsForSession(
+  sessionId: string,
+): Promise<ProofHistoryItem[]> {
+  await ensureDir();
+  let names: string[];
+  try {
+    names = await readdir(RUNS_DIR);
+  } catch {
+    return [];
+  }
+
+  const items: ProofHistoryItem[] = [];
+  for (const name of names) {
+    if (!name.endsWith(".json")) continue;
+    try {
+      const raw = await readFile(join(RUNS_DIR, name), "utf8");
+      const record = JSON.parse(raw) as ProofRecord;
+      if (record.sessionId && record.sessionId !== sessionId) continue;
+      if (!record.sessionId) continue;
+      items.push({
+        id: record.id,
+        createdAt: record.createdAt,
+        task: record.task,
+        done: record.done,
+        creditsConsumed: record.creditsConsumed,
+      });
+    } catch {
+      /* skip corrupt */
+    }
+  }
+
+  items.sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  return items;
 }
