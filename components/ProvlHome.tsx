@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { RunApiResponse } from "@/lib/api-types";
 
+import { KaneAccount } from "./KaneAccount";
 import { DemoPresets } from "./DemoPresets";
 import { PillTag } from "./PillTag";
 import { ResultCard } from "./ResultCard";
@@ -17,6 +18,7 @@ export function ProvlHome() {
   const [result, setResult] = useState<RunApiResponse | null>(null);
   const [task, setTask] = useState("");
   const [url, setUrl] = useState("");
+  const [accountRefresh, setAccountRefresh] = useState(0);
 
   async function runTask(runTaskText: string, runUrl: string) {
     setTask(runTaskText);
@@ -42,6 +44,7 @@ export function ProvlHome() {
         return;
       }
       setResult(data);
+      setAccountRefresh((n) => n + 1);
     } catch {
       setError("Could not reach the server. Is npm run dev running?");
     } finally {
@@ -74,26 +77,29 @@ export function ProvlHome() {
           </p>
 
           <div className="mt-7 w-full text-left sm:mt-10">
-            <RunForm
-              disabled={loading}
-              task={task}
-              url={url}
-              onTaskChange={setTask}
-              onUrlChange={setUrl}
-              onSubmit={runTask}
-            />
-          </div>
+            <KaneAccount key={accountRefresh} />
 
-          <div className="mt-5 w-full">
+            <div className="mt-5">
+              <RunForm
+                disabled={loading}
+                task={task}
+                url={url}
+                onTaskChange={setTask}
+                onUrlChange={setUrl}
+                onSubmit={runTask}
+              />
+            </div>
+
+            <div className="mt-5 w-full">
             <DemoPresets
               disabled={loading}
               onRunPreset={(t, u) => {
                 void runTask(t, u);
               }}
             />
-          </div>
+            </div>
 
-          {(loading || error || result) && (
+            {(loading || error || result) && (
             <div className="mt-6 w-full space-y-4 text-left">
               {loading && <RunLoading />}
 
@@ -114,7 +120,8 @@ export function ProvlHome() {
                 />
               )}
             </div>
-          )}
+            )}
+          </div>
         </section>
       </main>
 
