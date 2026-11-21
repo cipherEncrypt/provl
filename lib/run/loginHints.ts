@@ -55,4 +55,4 @@ export function shouldShowLoginSecretsHint(
 }
 
 export const LOGIN_SECRETS_HINT =
-  "This task needs a login. Add the email/username and password as secrets and run again.";
+  "This task needs a sign-in. Enter your email and password under “This task needs me to sign in,” then run again.";

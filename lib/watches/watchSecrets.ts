@@ -40,17 +40,27 @@ export function validateWatchSecretsForTask(
 ): { ok: true } | { ok: false; error: string } {
   if (!taskNeedsStoredSecrets(task)) return { ok: true };
   const secrets = normalizeSecretsInput(rows);
-  if (Object.keys(secrets).length === 0) {
+  if (taskNeedsStoredSecrets(task) && Object.keys(secrets).length === 0) {
     return {
       ok: false,
       error:
-        "This task uses {{placeholders}}. Add matching secrets below so scheduled runs can sign in.",
+        "This task needs sign-in details. Fill in email and password below.",
     };
   }
-  if (!hasEncryptionKey()) {
+
+  const wantsLogin = Boolean(secrets.username || secrets.password);
+  if (wantsLogin && (!secrets.username || !secrets.password)) {
     return {
       ok: false,
-      error: "Server is missing PROVL_ENC_KEY; cannot store monitor secrets.",
+      error: "Enter both email or username and password.",
+    };
+  }
+
+  if (Object.keys(secrets).length > 0 && !hasEncryptionKey()) {
+    return {
+      ok: false,
+      error:
+        "Sign-in storage is not set up on this server. Contact the person who runs Provl.",
     };
   }
   return { ok: true };

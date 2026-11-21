@@ -180,11 +180,9 @@ export function DashboardMonitorsView() {
         fails.
       </p>
       <p className="mt-3 rounded-card border border-steel-line bg-mist/80 px-4 py-3 text-sm text-steel">
-        Login flows are supported: use{" "}
-        <code className="text-ink">{`{{username}}`}</code> and{" "}
-        <code className="text-ink">{`{{password}}`}</code> in the task and add
-        matching secrets below. Secrets are encrypted and only sent to Kane at
-        run time.
+        Describe what to check in plain English. If the site needs a sign-in,
+        turn on &quot;This task needs me to sign in&quot; and enter your email
+        and password below.
       </p>
 
       <form
@@ -250,10 +248,12 @@ export function DashboardMonitorsView() {
             onChange={(e) => setNeedsLoginToggle(e.target.checked)}
             className="size-4 shrink-0 rounded border-steel-line accent-ink"
           />
-          <span>This task needs a login</span>
+          <span>This task needs me to sign in</span>
         </label>
         {secretsVisible ? (
           <RunSecretsEditor
+            variant="signIn"
+            context="monitor"
             disabled={creating}
             rows={secretRows}
             onChange={setSecretRows}

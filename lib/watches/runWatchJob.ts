@@ -3,13 +3,16 @@ import { executeRunAndSaveProof } from "@/lib/provl/executeRunAndSaveProof";
 
 import type { WatchRecord } from "./types";
 import { recordWatchRun } from "./watchStore";
-import { secretsRowsForRun } from "./watchSecrets";
+import { decryptWatchSecrets, secretsRowsForRun } from "./watchSecrets";
+import { taskForWatchRun } from "./watchTaskForRun";
 
 export async function runWatchJob(watch: WatchRecord) {
   const secretRows = secretsRowsForRun(watch.secretsEnc);
+  const secretsMap = decryptWatchSecrets(watch.secretsEnc);
+  const task = taskForWatchRun(watch.task, secretsMap);
   const result = await executeRunAndSaveProof({
     sessionId: watch.sessionId,
-    task: watch.task,
+    task,
     url: watch.url,
     ...(secretRows.length > 0 ? { secrets: secretRows } : {}),
   });

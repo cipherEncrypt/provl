@@ -62,7 +62,7 @@ export function RunForm({
           value={task}
           onChange={(e) => onTaskChange(e.target.value)}
           spellCheck={true}
-          placeholder='Log in with {{username}} and {{password}}, then open settings…'
+          placeholder="Sign in and open my account settings, then confirm the profile name is visible…"
           className="field-input min-h-[8rem] resize-y"
         />
       </label>
@@ -94,11 +94,13 @@ export function RunForm({
           onChange={(e) => setNeedsLoginToggle(e.target.checked)}
           className="size-4 shrink-0 rounded border-steel-line accent-ink"
         />
-        <span>This task needs a login</span>
+        <span>This task needs me to sign in</span>
       </label>
 
       {secretsVisible && (
         <RunSecretsEditor
+          variant="signIn"
+          context="run"
           disabled={disabled}
           rows={secretRows}
           onChange={setSecretRows}
