@@ -17,7 +17,11 @@ export function DashboardRunView() {
   const [task, setTask] = useState("");
   const [url, setUrl] = useState("");
 
-  async function runTask(runTaskText: string, runUrl: string) {
+  async function runTask(
+    runTaskText: string,
+    runUrl: string,
+    secrets: { key: string; value: string }[] = [],
+  ) {
     setTask(runTaskText);
     setUrl(runUrl);
     setLoading(true);
@@ -28,7 +32,11 @@ export function DashboardRunView() {
       const res = await fetch("/api/kane/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task: runTaskText, url: runUrl || undefined }),
+        body: JSON.stringify({
+          task: runTaskText,
+          url: runUrl || undefined,
+          ...(secrets.length > 0 ? { secrets } : {}),
+        }),
       });
 
       const data = (await res.json().catch(() => ({}))) as RunApiResponse;
@@ -71,7 +79,7 @@ export function DashboardRunView() {
         <DemoPresets
           disabled={loading}
           onRunPreset={(t, u) => {
-            void runTask(t, u);
+            void runTask(t, u, []);
           }}
         />
       </div>

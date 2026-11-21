@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { sanitizeRunArtifacts, sanitizeStoredTask } from "@/lib/kane/sanitizeRunForStorage";
+import { normalizeSecretsInput } from "@/lib/kane/secrets";
 import { runKaneWithRetry } from "@/lib/kane/runWithRetry";
 import {
   addSessionCredits,
@@ -12,7 +14,7 @@ import { saveProof } from "@/lib/proof/store";
 export const maxDuration = 600;
 
 export async function POST(req: Request) {
-  let body: { task?: string; url?: string };
+  let body: { task?: string; url?: string; secrets?: { key: string; value: string }[] };
   try {
     body = await req.json();
   } catch {
@@ -21,6 +23,7 @@ export async function POST(req: Request) {
 
   const task = body.task?.trim();
   const url = body.url?.trim() || undefined;
+  const secrets = normalizeSecretsInput(body.secrets);
 
   if (!task) {
     return NextResponse.json({ error: "task is required" }, { status: 400 });
@@ -32,6 +35,7 @@ export async function POST(req: Request) {
   const result = await runKaneWithRetry({
     task,
     url,
+    ...(Object.keys(secrets).length > 0 ? { variables: secrets } : {}),
     ...(connected
       ? {
           basicAuth: {
@@ -46,19 +50,27 @@ export async function POST(req: Request) {
     await addSessionCredits(sessionId, result.creditsConsumed);
   }
 
+  const storedTask = sanitizeStoredTask(task, secrets);
+  const safe = sanitizeRunArtifacts(secrets, {
+    summary: result.summary,
+    oneLiner: result.oneLiner,
+    finalState: result.finalState,
+    honestStop: result.honestStop,
+  });
+
   const proof = await saveProof({
     sessionId,
-    task,
+    task: storedTask,
     url,
     done: result.done,
     exitCode: result.exitCode,
     replayUrl: result.replayUrl,
-    oneLiner: result.oneLiner,
-    summary: result.summary,
-    finalState: result.finalState,
+    oneLiner: safe.oneLiner,
+    summary: safe.summary,
+    finalState: safe.finalState,
     duration: result.duration,
     creditsConsumed: result.creditsConsumed,
-    honestStop: result.honestStop,
+    honestStop: safe.honestStop,
     attempts: result.attempts,
   });
 
@@ -66,7 +78,7 @@ export async function POST(req: Request) {
     sessionId,
     userId: connected?.username?.trim() ?? null,
     proofId: proof.id,
-    task,
+    task: storedTask,
     url,
     done: proof.done,
     creditsConsumed: proof.creditsConsumed,
@@ -81,12 +93,12 @@ export async function POST(req: Request) {
       done: result.done,
       exitCode: result.exitCode,
       replayUrl: result.replayUrl,
-      oneLiner: result.oneLiner,
-      summary: result.summary,
-      finalState: result.finalState,
+      oneLiner: safe.oneLiner,
+      summary: safe.summary,
+      finalState: safe.finalState,
       duration: result.duration,
       creditsConsumed: result.creditsConsumed,
-      honestStop: result.honestStop,
+      honestStop: safe.honestStop,
       attempts: result.attempts,
       proofId: proof.id,
       proofUrl,

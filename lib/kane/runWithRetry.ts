@@ -1,21 +1,33 @@
 import { buildProvlResult } from "./parseNdjson";
+import { redactSecretsInText } from "./secrets";
 import { shouldRetryKaneRun } from "./retryPolicy";
 import { runKane } from "./runKane";
 import type { ProvlRunResult, RunKaneOptions } from "./types";
 
 const MAX_ATTEMPTS = 3;
 
-function buildRetryTask(originalTask: string, previous: ProvlRunResult): string {
+function buildRetryTask(
+  originalTask: string,
+  previous: ProvlRunResult,
+  secrets: Record<string, string> | undefined,
+): string {
+  const scrub = (s: string | null | undefined) =>
+    secrets && Object.keys(secrets).length > 0
+      ? redactSecretsInText(s, secrets) ?? s
+      : s;
+
   const parts = [
     originalTask,
     "",
     "Previous Kane attempt failed. Use this feedback and try again:",
-    previous.summary ? `Summary: ${previous.summary}` : null,
+    previous.summary ? `Summary: ${scrub(previous.summary)}` : null,
     previous.honestStop?.failedStepRemark
-      ? `Failed step: ${previous.honestStop.failedStepRemark}`
+      ? `Failed step: ${scrub(previous.honestStop.failedStepRemark)}`
       : null,
-    previous.honestStop?.reason ? `Reason: ${previous.honestStop.reason}` : null,
-    previous.oneLiner ? `One-liner: ${previous.oneLiner}` : null,
+    previous.honestStop?.reason
+      ? `Reason: ${scrub(previous.honestStop.reason)}`
+      : null,
+    previous.oneLiner ? `One-liner: ${scrub(previous.oneLiner)}` : null,
   ].filter(Boolean);
 
   return parts.join("\n");
@@ -46,7 +58,7 @@ export async function runKaneWithRetry(
     }
 
     if (attempt < MAX_ATTEMPTS) {
-      task = buildRetryTask(options.task, result);
+      task = buildRetryTask(options.task, result, options.variables);
     }
   }
 

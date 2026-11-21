@@ -58,4 +58,6 @@ export type RunKaneOptions = {
   timeoutSeconds?: number;
   /** When set, Kane bills this account (per-run --username / --access-key). */
   basicAuth?: { username: string; accessKey: string };
+  /** Kane --variables (values passed to CLI only, not stored). */
+  variables?: Record<string, string>;
 };

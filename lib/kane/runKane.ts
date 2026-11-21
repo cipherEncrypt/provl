@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 
+import { buildKaneVariablesArg } from "./secrets";
 import type { RunKaneOptions } from "./types";
 
 const KANE_PKG = "@testmuai/kane-cli";
@@ -37,6 +38,13 @@ export function runKane(options: RunKaneOptions): Promise<KaneProcessResult> {
     );
   }
   // else: no auth flags — Kane CLI uses this machine's ~/.testmuai profile (demo fallback).
+
+  const variablesJson = options.variables
+    ? buildKaneVariablesArg(options.variables)
+    : null;
+  if (variablesJson) {
+    args.push("--variables", variablesJson);
+  }
 
   return new Promise((resolve, reject) => {
     const child = spawn("npx", args, {
