@@ -1,18 +1,12 @@
 import { Resend } from "resend";
 
+import { proofPublicUrl } from "@/lib/proof/proofPublicUrl";
 import type { WatchRecord } from "@/lib/watches/types";
 
 import {
   buildResendFrom,
   resolveAlertRecipient,
 } from "./resendConfig";
-
-function publicProofUrl(proofId: string): string {
-  const base =
-    process.env.PROVL_PUBLIC_URL?.trim().replace(/\/$/, "") ??
-    "http://localhost:3000";
-  return `${base}/proof/${proofId}`;
-}
 
 function escapeHtml(text: string): string {
   return text
@@ -40,6 +34,14 @@ export async function sendWatchFailureEmail(
     return { sent: false, reason: "disabled" };
   }
 
+  if (!watch.alertEmail?.trim()) {
+    console.info("[monitors] alert skipped (no alert email on monitor)", {
+      watchId: watch.id,
+      proofId,
+    });
+    return { sent: false, reason: "skipped", detail: "No alert email on monitor." };
+  }
+
   const { from, sandbox } = buildResendFrom();
   const { to, redirected } = resolveAlertRecipient(watch.alertEmail, sandbox);
 
@@ -57,7 +59,7 @@ export async function sendWatchFailureEmail(
     );
   }
 
-  const proofUrl = publicProofUrl(proofId);
+  const proofUrl = proofPublicUrl(proofId);
   const summary = oneLiner?.trim() || "The scheduled verification did not pass.";
   const task = escapeHtml(watch.task);
   const subject = "Provl monitor: verification failed";

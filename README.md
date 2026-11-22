@@ -49,6 +49,8 @@ cp .env.example .env
 
 Leave `.env` empty if you use OAuth above. Only set `LT_USERNAME` / `LT_ACCESS_KEY` if you prefer API keys instead of OAuth.
 
+**Monitors** work with zero extra env: failures appear on `/dashboard/monitors` and you can **Email this proof** via `mailto:`. Add `RESEND_API_KEY` only if you want automatic failure emails.
+
 ### 4. Start Provl
 
 ```bash
@@ -138,6 +140,7 @@ Next.js UI at `/`: input, loading state, result card, shareable `/proof/[id]`.
 - Home UI, result card, shareable proof pages
 - Local cancel sandbox at `/demo/subscription`
 - One-click judge demo presets (DONE + honest NOT DONE)
+- **Monitors** (`/dashboard/monitors`): scheduled re-runs with **in-app** pass/fail on each row and a latest proof link. No email setup required. Use **Email this proof** (`mailto:`) on the proof page or after a failure to share the task, verdict, and link from your own mail app. **Automatic email is optional:** set `RESEND_API_KEY` (and `RESEND_FROM`) if you want failures emailed for you; without a key, runs still complete and failures show in the dashboard. Resend’s sandbox sender (`onboarding@resend.dev`) can only deliver to your Resend signup address until you [verify a domain](https://resend.com/domains); use `RESEND_ALERT_OVERRIDE` locally or a verified `RESEND_FROM` in production.
 
 ### Won't have (v1)
 

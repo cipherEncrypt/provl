@@ -34,9 +34,9 @@ export function validateWatchCreate(body: {
     return { ok: false, error: "schedule must be hourly or daily" };
   }
 
-  const alertEmail = body.alertEmail?.trim();
-  if (!alertEmail || !EMAIL_RE.test(alertEmail)) {
-    return { ok: false, error: "A valid alert email is required" };
+  const alertEmail = body.alertEmail?.trim() ?? "";
+  if (alertEmail && !EMAIL_RE.test(alertEmail)) {
+    return { ok: false, error: "Alert email must be valid when provided" };
   }
 
   const secretsCheck = validateWatchSecretsForTask(task, body.secrets);

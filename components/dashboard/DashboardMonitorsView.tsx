@@ -9,6 +9,8 @@ import {
 } from "@/lib/run/loginHints";
 import type { WatchLastStatus, WatchSchedule } from "@/lib/watches/types";
 
+import { buildProofMailto } from "@/lib/proof/proofMailto";
+
 import {
   RunSecretsEditor,
   type SecretRow,
@@ -28,10 +30,27 @@ type WatchRow = {
   createdAt: string;
 };
 
-function statusLabel(status: WatchLastStatus): string {
-  if (status === "done") return "DONE";
-  if (status === "not_done") return "NOT DONE";
-  return "Never run";
+function rowVerdictBadge(status: WatchLastStatus): {
+  label: string;
+  className: string;
+} {
+  if (status === "done") {
+    return {
+      label: "OK",
+      className: "bg-ink text-white",
+    };
+  }
+  if (status === "not_done") {
+    return {
+      label: "Verification failed",
+      className:
+        "border border-red-600/40 bg-red-50 text-red-800",
+    };
+  }
+  return {
+    label: "Never run",
+    className: "border border-steel-line bg-paper text-steel",
+  };
 }
 
 function truncateTask(task: string, max = 72): string {
@@ -54,6 +73,8 @@ export function DashboardMonitorsView() {
   const [creating, setCreating] = useState(false);
   const [runningId, setRunningId] = useState<string | null>(null);
   const [runNotice, setRunNotice] = useState<string | null>(null);
+  const [runMailtoHref, setRunMailtoHref] = useState<string | null>(null);
+  const [siteOrigin, setSiteOrigin] = useState("");
 
   const loadWatches = useCallback(async () => {
     try {
@@ -72,6 +93,10 @@ export function DashboardMonitorsView() {
   useEffect(() => {
     void loadWatches();
   }, [loadWatches]);
+
+  useEffect(() => {
+    setSiteOrigin(window.location.origin);
+  }, []);
 
   const secretsVisible =
     taskSuggestsLogin(formTask) ||
@@ -115,13 +140,18 @@ export function DashboardMonitorsView() {
     setRunningId(id);
     setError(null);
     setRunNotice(null);
+    setRunMailtoHref(null);
     try {
       const res = await fetch(`/api/watches/${id}/run`, {
         method: "POST",
       });
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
-        run?: { done?: boolean; proofUrl?: string };
+        run?: {
+          done?: boolean;
+          proofUrl?: string;
+          oneLiner?: string | null;
+        };
         alert?: { sent?: boolean; detail?: string } | null;
       };
       if (data.error && !data.run) {
@@ -129,20 +159,28 @@ export function DashboardMonitorsView() {
         return;
       }
       const done = Boolean(data.run?.done);
+      const watchRow = watches?.find((w) => w.id === id);
       if (done) {
-        setRunNotice("Run finished: DONE. Proof is ready.");
-      } else if (data.alert?.sent) {
-        setRunNotice(
-          "Run finished: NOT DONE. Proof saved and we sent an alert email.",
-        );
-      } else if (data.alert?.detail) {
-        setRunNotice(
-          `Run finished: NOT DONE. Proof saved. Email not sent: ${data.alert.detail}`,
-        );
+        setRunNotice("Verification passed. Latest proof is on this monitor.");
       } else {
-        setRunNotice(
-          "Run finished: NOT DONE. Proof saved (no alert email configured).",
-        );
+        let msg =
+          "Verification failed. The row below shows the result and latest proof link.";
+        if (data.alert?.sent) {
+          msg += " We also sent an automatic alert email.";
+        }
+        setRunNotice(msg);
+        const proofUrl = data.run?.proofUrl?.trim();
+        if (proofUrl && watchRow) {
+          setRunMailtoHref(
+            buildProofMailto({
+              task: watchRow.task,
+              done: false,
+              proofUrl,
+              oneLiner: data.run?.oneLiner,
+              to: watchRow.alertEmail || undefined,
+            }),
+          );
+        }
       }
       await loadWatches();
       window.dispatchEvent(new Event("provl:account-refresh"));
@@ -187,8 +225,12 @@ export function DashboardMonitorsView() {
   return (
     <DashboardViewColumn>
       <p className="text-sm leading-relaxed text-steel">
-        Monitors re-run a saved task on a schedule and alert you when verification
-        fails.
+        Monitors re-run a saved task on a schedule and show pass or fail right in
+        this list.
+      </p>
+      <p className="mt-3 rounded-card border border-steel-line bg-paper px-4 py-3 text-sm leading-relaxed text-steel">
+        Failures show here instantly. Email this proof with one click, or add a
+        Resend key for automatic emails.
       </p>
       <p className="mt-3 rounded-card border border-steel-line bg-mist/80 px-4 py-3 text-sm text-steel">
         Describe what to check in plain English. If the site needs a sign-in,
@@ -239,14 +281,15 @@ export function DashboardMonitorsView() {
             </select>
           </label>
           <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-steel">Alert email</span>
+            <span className="text-xs font-medium text-steel">
+              Alert email (optional)
+            </span>
             <input
               type="email"
-              required
               disabled={creating}
               value={formEmail}
               onChange={(e) => setFormEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder="For automatic Resend alerts only"
               className="field-input text-sm"
             />
           </label>
@@ -285,9 +328,20 @@ export function DashboardMonitorsView() {
         </p>
       )}
       {runNotice && (
-        <p className="mt-4 rounded-card border border-steel-line bg-mist px-4 py-3 text-sm text-ink" role="status">
-          {runNotice}
-        </p>
+        <div
+          className="mt-4 rounded-card border border-steel-line bg-mist px-4 py-3 text-sm text-ink"
+          role="status"
+        >
+          <p>{runNotice}</p>
+          {runMailtoHref ? (
+            <a
+              href={runMailtoHref}
+              className="btn-secondary mt-3 inline-flex text-sm"
+            >
+              Email this proof
+            </a>
+          ) : null}
+        </div>
       )}
 
       {watches.length === 0 ? (
@@ -305,27 +359,28 @@ export function DashboardMonitorsView() {
                   timeStyle: "short",
                 }).format(new Date(watch.lastRunAt))
               : "-";
-            const status = statusLabel(watch.lastStatus);
-            const done = watch.lastStatus === "done";
+            const verdict = rowVerdictBadge(watch.lastStatus);
+            const failed = watch.lastStatus === "not_done";
             const isRunning = runningId === watch.id;
+            const proofPath = watch.lastProofId
+              ? `/proof/${watch.lastProofId}`
+              : null;
+            const proofUrlAbsolute =
+              proofPath && siteOrigin ? `${siteOrigin}${proofPath}` : null;
 
             return (
               <li
                 key={watch.id}
-                className="flex flex-col gap-4 px-4 py-4 lg:flex-row lg:items-start lg:justify-between"
+                className={`flex flex-col gap-4 px-4 py-4 lg:flex-row lg:items-start lg:justify-between ${
+                  failed ? "border-l-4 border-l-red-600/70" : ""
+                }`}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold tracking-wide ${
-                        watch.lastStatus === "never"
-                          ? "border border-steel-line bg-paper text-steel"
-                          : done
-                            ? "bg-ink text-white"
-                            : "border border-steel-line bg-mist text-ink"
-                      }`}
+                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide ${verdict.className}`}
                     >
-                      {status}
+                      {verdict.label}
                     </span>
                     <span className="text-xs text-steel-soft">
                       {watch.schedule} · {watch.active ? "Active" : "Paused"}
@@ -334,9 +389,23 @@ export function DashboardMonitorsView() {
                   <p className="mt-1 text-sm text-ink">{truncateTask(watch.task)}</p>
                   <p className="mt-1 text-xs text-steel">
                     Last run: <span className="tabular-nums">{when}</span>
-                    {" · "}
-                    <span className="text-steel-mute">{watch.alertEmail}</span>
+                    {watch.alertEmail ? (
+                      <>
+                        {" · "}
+                        <span className="text-steel-mute">{watch.alertEmail}</span>
+                      </>
+                    ) : null}
                   </p>
+                  {watch.lastProofId && proofPath ? (
+                    <p className="mt-2 text-xs">
+                      <Link
+                        href={proofPath}
+                        className="font-medium text-ink underline-offset-2 hover:underline"
+                      >
+                        Latest proof
+                      </Link>
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap lg:w-auto lg:max-w-md">
@@ -348,13 +417,26 @@ export function DashboardMonitorsView() {
                   >
                     {isRunning ? "Running in browser…" : "Run now"}
                   </button>
-                  {watch.lastProofId ? (
-                    <Link
-                      href={`/proof/${watch.lastProofId}`}
-                      className="btn-secondary w-full text-center text-sm sm:w-auto"
-                    >
-                      Latest proof
-                    </Link>
+                  {watch.lastProofId && proofUrlAbsolute ? (
+                    <>
+                      <Link
+                        href={`/proof/${watch.lastProofId}`}
+                        className="btn-secondary w-full text-center text-sm sm:w-auto"
+                      >
+                        Open proof
+                      </Link>
+                      <a
+                        href={buildProofMailto({
+                          task: watch.task,
+                          done: watch.lastStatus === "done",
+                          proofUrl: proofUrlAbsolute,
+                          to: watch.alertEmail || undefined,
+                        })}
+                        className="btn-secondary w-full text-center text-sm sm:w-auto"
+                      >
+                        Email this proof
+                      </a>
+                    </>
                   ) : null}
                   <button
                     type="button"

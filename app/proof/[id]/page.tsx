@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { EmailProofLink } from "@/components/EmailProofLink";
 import { PillTag } from "@/components/PillTag";
 import { ResultCard } from "@/components/ResultCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getProof } from "@/lib/proof/store";
+import { proofPublicUrl } from "@/lib/proof/proofPublicUrl";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +46,16 @@ export default async function ProofPage({ params }: PageProps) {
         </div>
 
         <ResultCard result={proof} showShareHint={false} />
+
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
+          <EmailProofLink
+            task={proof.task}
+            done={proof.done}
+            proofUrl={proofPublicUrl(proof.id)}
+            oneLiner={proof.oneLiner}
+            className="btn-secondary w-full text-center text-sm sm:w-auto"
+          />
+        </div>
 
         <p className="text-center text-sm text-steel">
           <Link
