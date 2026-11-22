@@ -14,16 +14,20 @@
     "phase-a:parse-fixtures": "tsx scripts/verify-parser-fixtures.ts",
     "phase-a:retry-policy": "tsx scripts/verify-retry-policy.ts",
     "phase-a:acceptance": "tsx scripts/acceptance-cancel.ts",
-    "cron:dev": "tsx scripts/dev-cron.ts"
+    "cron:dev": "tsx scripts/dev-cron.ts",
+    "mcp": "tsx mcp/server.ts",
+    "mcp:prove": "tsx scripts/mcp-prove-client.ts"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "geist": "^1.9.2",
     "mongodb": "^6.22.0",
     "next": "^15.5.4",
     "node-cron": "^4.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "resend": "^6.39.0"
+    "resend": "^6.39.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^22.18.6",
