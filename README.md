@@ -50,7 +50,7 @@ Everything on a result card comes straight from that real Kane run.
 
 ### 1. Clone and install
 ```bash
-git clone https://github.com/dex-cipher/provl provl
+git clone https://github.com/cipherEncrypt/provl.git provl
 cd provl
 npm install
 ```
