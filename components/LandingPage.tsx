@@ -20,10 +20,48 @@ const HOW_IT_WORKS = [
   },
 ];
 
+const WHAT_PROVL_DOES = [
+  {
+    title: "Verify any web task",
+    body: "Describe it in plain English; Kane runs it in real Chrome and returns DONE or NOT DONE with proof.",
+  },
+  {
+    title: "Shareable proof",
+    body: "Every run gets a proof page with the verdict, proof fields, and a replay link.",
+  },
+  {
+    title: "Monitors",
+    body: "Save a task and Provl re-runs it on a schedule. Failures show in the app right away; optional email alerts.",
+  },
+  {
+    title: "Bring your own account",
+    body: "Connect your own Kane account; runs bill your credits, with one-click top-up.",
+  },
+  {
+    title: "Secure logins",
+    body: "Supply credentials as redacted variables that never appear in history or proof.",
+  },
+  {
+    title: "MCP server",
+    body: "Any AI agent (Claude, Cursor) can call Provl as a tool and get a verified verdict.",
+  },
+  {
+    title: "Run history",
+    body: "Past runs live in History; connect Kane and optional cloud storage to follow your account across devices.",
+  },
+];
+
+const ROADMAP = [
+  "Mid-run credential prompt in Kane agent runs",
+  "Hosted multi-user history as the default store",
+  "Domain-verified email alerts for Monitors",
+  "HTTP MCP transport for remote agents",
+];
+
 const GET_STARTED = [
-  'Open the app and type a web task, like "cancel my subscription on this page," with the site URL.',
-  "Hit Run. Provl drives a real browser through Kane. A run takes about 1–3 minutes.",
-  "Read the proof card: DONE or NOT DONE, the proof fields, and a replay link you can share. If it can't finish, Provl tells you exactly where it stopped.",
+  "Open the dashboard. On Run, describe a web task (optional URL) or try the demo presets. Each run takes about 1–3 minutes.",
+  "Optional: Account to connect your Kane username and keys; History for past proofs; Monitors to save a task on an hourly or daily schedule.",
+  "Read DONE or NOT DONE, open the proof page, share the replay, or wire Provl into another agent with the MCP server (see docs/mcp.md).",
 ];
 
 const KANE_DOCS =
@@ -53,8 +91,9 @@ export function LandingPage() {
 
             <p className="mt-4 max-w-xl text-pretty text-[15px] leading-relaxed text-steel sm:mt-5 sm:text-lg">
               AI agents can do your web tasks now, but they just say &quot;done.&quot;
-              Provl does the task in a real browser and hands you proof it
-              actually happened — a verdict you can replay.
+              Provl runs the task in real Chrome, then gives you DONE or NOT DONE,
+              a proof page, scheduled monitors, history, and an MCP tool other
+              agents can call.
             </p>
 
             <div className="mt-7 flex w-full max-w-sm flex-col gap-3 sm:mt-8 sm:max-w-md sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
@@ -88,7 +127,7 @@ export function LandingPage() {
 
           <div className="relative z-10 mx-auto -mt-4 px-4 pb-12 pt-0 sm:-mt-6 sm:px-6 sm:pb-16">
             <p className="text-[11px] font-medium leading-snug tracking-wide text-steel sm:text-xs">
-              Powered by Kane CLI · Works with Claude Code, Cursor, Codex
+              Powered by Kane CLI · MCP server for Claude Desktop and Cursor
             </p>
           </div>
         </section>
@@ -134,6 +173,55 @@ export function LandingPage() {
               </article>
             ))}
           </div>
+        </section>
+
+        {/* WHAT PROVL DOES */}
+        <section
+          id="features"
+          className="mx-auto w-full max-w-5xl scroll-mt-20 px-4 py-10 sm:scroll-mt-24 sm:px-6 sm:py-14"
+        >
+          <div className="text-center">
+            <PillTag label="What Provl does" />
+            <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight sm:mt-5 sm:text-4xl">
+              Proof for chores, schedules, and agents.
+            </h2>
+          </div>
+          <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
+            {WHAT_PROVL_DOES.map((item) => (
+              <article
+                key={item.title}
+                className="surface-card !p-4 text-left sm:!p-5"
+              >
+                <h3 className="text-base font-semibold text-ink">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel">
+                  {item.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ROADMAP */}
+        <section
+          id="roadmap"
+          className="mx-auto w-full max-w-3xl scroll-mt-20 px-4 py-10 sm:scroll-mt-24 sm:px-6 sm:py-12"
+        >
+          <div className="text-center">
+            <PillTag label="Roadmap" />
+            <h2 className="mt-4 text-balance text-2xl font-semibold tracking-tight sm:mt-5 sm:text-3xl">
+              What&apos;s next
+            </h2>
+          </div>
+          <ul className="mt-8 space-y-3 sm:mt-10">
+            {ROADMAP.map((item) => (
+              <li
+                key={item}
+                className="surface-card !px-4 !py-3 text-sm leading-relaxed text-steel sm:!px-5"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* HOW TO USE / GET STARTED */}
@@ -185,7 +273,7 @@ export function LandingPage() {
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-steel">
               Open the app and try the presets: cancel a sandbox subscription
               (DONE), then the honest fail on a login page that has no Google
-              button (NOT DONE). Each run takes about 1–3 minutes.
+              button (NOT DONE). Each run takes about 1-3 minutes.
             </p>
             <Link href="/dashboard" className="btn-primary mt-6 w-full sm:w-auto">
               Open app
@@ -204,8 +292,9 @@ export function LandingPage() {
               A card you can send.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-steel">
-              Every finished run gets a shareable /proof/… page with the
-              verdict, proof fields, and Kane replay link — no re-run required.
+              Every finished run gets a shareable /proof/… page with DONE or NOT
+              DONE, proof fields, and a Kane replay link. Email it with one
+              click from the app or from Monitors after a failure.
             </p>
           </div>
         </section>
@@ -221,8 +310,8 @@ export function LandingPage() {
                 Let&apos;s prove the next chore.
               </h2>
               <p className="mt-2 max-w-md text-sm text-steel">
-                Open the app, describe a task, and walk away with a verdict you
-                can replay.
+                Run once, monitor on a schedule, review History, connect your
+                Kane account, or call Provl from another agent over MCP.
               </p>
             </div>
             <Link href="/dashboard" className="btn-primary w-full shrink-0 sm:w-auto">
@@ -251,8 +340,23 @@ export function LandingPage() {
                 </a>
               </li>
               <li>
+                <a href="#features" className="hover:text-ink">
+                  What Provl does
+                </a>
+              </li>
+              <li>
+                <a href="#roadmap" className="hover:text-ink">
+                  Roadmap
+                </a>
+              </li>
+              <li>
                 <a href="#get-started" className="hover:text-ink">
                   How to use
+                </a>
+              </li>
+              <li>
+                <a href="#faq" className="hover:text-ink">
+                  FAQ
                 </a>
               </li>
               <li>

@@ -68,7 +68,14 @@ export function DashboardRunView() {
     <DashboardViewColumn>
       <p className="text-sm leading-relaxed text-steel">
         Describe a web task in plain English. Provl runs it in real Chrome and
-        returns a DONE or NOT DONE verdict you can share.
+        returns DONE or NOT DONE with a shareable proof page.
+      </p>
+      <p className="text-xs leading-relaxed text-steel-soft">
+        Need a schedule? Use{" "}
+        <strong className="font-medium text-steel">Monitors</strong>. Past runs
+        are in <strong className="font-medium text-steel">History</strong>.
+        Connect Kane under <strong className="font-medium text-steel">Account</strong>.
+        Other agents can call Provl via MCP (see project README).
       </p>
 
       <div id="run" className="scroll-mt-8">

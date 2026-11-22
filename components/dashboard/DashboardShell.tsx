@@ -22,6 +22,17 @@ const TITLES: Record<string, string> = {
   "/dashboard/account": "Account",
 };
 
+const PAGE_HINTS: Record<string, string> = {
+  "/dashboard":
+    "One-off verified runs and demo presets. Use Monitors for schedules, History for past proofs, Account for Kane connect.",
+  "/dashboard/monitors":
+    "Scheduled re-runs with in-app pass or fail. Optional email alerts; mailto works with no setup.",
+  "/dashboard/history":
+    "Past runs for this session. Connect Kane and optional MongoDB to sync by account.",
+  "/dashboard/account":
+    "Connect your Kane account or use machine OAuth. Credits and spend for this session.",
+};
+
 type DashboardShellProps = {
   children: ReactNode;
 };
@@ -32,6 +43,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const title = TITLES[pathname] ?? "Dashboard";
+  const pageHint = PAGE_HINTS[pathname];
 
   useEffect(() => {
     setMobileOpen(false);
@@ -100,6 +112,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
         ))}
       </nav>
 
+      <p className="mt-5 text-xs leading-relaxed text-steel-soft">
+        <span className="font-medium text-steel">Run</span> now,{" "}
+        <span className="font-medium text-steel">Monitors</span> on a schedule,{" "}
+        <span className="font-medium text-steel">History</span> for proofs,{" "}
+        <span className="font-medium text-steel">Account</span> for Kane credits.
+      </p>
+
       <div className="mt-auto border-t border-steel-line/80 pt-4">
         <p className="text-xs text-steel-soft">Signed in as</p>
         <p className="mt-1 truncate text-sm font-medium text-ink" title={signedInLabel}>
@@ -135,7 +154,14 @@ export function DashboardShell({ children }: DashboardShellProps) {
             )}
           </svg>
         </button>
-        <span className="text-sm font-semibold text-ink">{title}</span>
+        <div className="min-w-0 flex-1 text-center">
+          <span className="text-sm font-semibold text-ink">{title}</span>
+          {pageHint ? (
+            <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-steel-soft">
+              {pageHint}
+            </p>
+          ) : null}
+        </div>
         <DashboardCreditsPill status={status} />
       </header>
 
@@ -174,8 +200,13 @@ export function DashboardShell({ children }: DashboardShellProps) {
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="hidden items-center justify-between gap-4 border-b border-steel-line px-6 py-4 lg:flex">
-          <h1 className="text-lg font-semibold tracking-tight text-ink">{title}</h1>
+        <header className="hidden gap-4 border-b border-steel-line px-6 py-4 lg:flex lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-lg font-semibold tracking-tight text-ink">{title}</h1>
+            {pageHint ? (
+              <p className="mt-1 max-w-xl text-sm text-steel">{pageHint}</p>
+            ) : null}
+          </div>
           <DashboardCreditsPill status={status} />
         </header>
 

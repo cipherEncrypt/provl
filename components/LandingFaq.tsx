@@ -7,11 +7,11 @@ import { PillTag } from "./PillTag";
 const FAQS = [
   {
     q: "What is Provl?",
-    a: "Provl is a consumer product built around Kane CLI. You describe a web chore in plain English; Provl runs it in a real browser and returns a proof card — done or not done — with a replay link.",
+    a: "Provl is a consumer product built around Kane CLI. You describe a web chore in plain English; Provl runs it in real Chrome and returns DONE or NOT DONE with a shareable proof page, optional scheduled Monitors, run History, account connect, secure sign-in variables, and an MCP server for other agents.",
   },
   {
     q: "How does it verify?",
-    a: "Provl hands your task to Kane CLI, which drives a real Chrome browser to complete it, then checks the outcome on the live page. Provl only shows DONE when Kane returns a pass verdict and exit code 0. Everything on the result card — the summary, the proof fields, the replay link — comes straight from that real run.",
+    a: "Provl hands your task to Kane CLI, which drives a real Chrome browser to complete it, then checks the outcome on the live page. Provl only shows DONE when Kane returns a pass verdict and exit code 0. Everything on the result card (the summary, the proof fields, the replay link) comes straight from that real run.",
   },
   {
     q: "Can it fail honestly?",
@@ -19,7 +19,15 @@ const FAQS = [
   },
   {
     q: "What is Kane CLI?",
-    a: "Kane CLI, by TestMu AI, is a browser agent that takes a plain-English goal, drives a real browser, and returns a pass or fail backed by evidence and a shareable replay. It's the engine underneath Provl — the part that proves the task actually happened.",
+    a: "Kane CLI, by TestMu AI, is a browser agent that takes a plain-English goal, drives a real browser, and returns a pass or fail backed by evidence and a shareable replay. It's the engine underneath Provl, the part that proves the task actually happened.",
+  },
+  {
+    q: "Can it run on a schedule?",
+    a: "Yes. Monitors let you save a task and re-run it hourly or daily. Results show pass or fail in the dashboard; you can email a proof or add Resend for automatic failure email.",
+  },
+  {
+    q: "Can other AI agents use Provl?",
+    a: "Yes. The Provl MCP server exposes verify_web_task over stdio. Claude Desktop, Cursor, and similar clients can call it and get the same Kane-verified verdict and proof URL as the web app.",
   },
 ];
 

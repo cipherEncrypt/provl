@@ -3,11 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { ProvlMark } from "./ProvlLogo";
+
 const LINKS = [
   { href: "#how-it-works", label: "How it works" },
+  { href: "#features", label: "Features" },
+  { href: "#roadmap", label: "Roadmap" },
   { href: "#get-started", label: "How to use" },
   { href: "#demo", label: "Demo" },
-  { href: "#proof", label: "Proof" },
+  { href: "#faq", label: "FAQ" },
   {
     href: "https://www.testmuai.com/support/docs/kane-cli-introduction/",
     label: "Docs",
@@ -44,14 +48,7 @@ export function LandingNav() {
             className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-ink text-white"
             aria-hidden="true"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path
-                d="M2 7h10M7 2v10"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="square"
-              />
-            </svg>
+            <ProvlMark onDark className="h-[18px] w-[18px]" />
           </span>
           <span className="text-[17px] font-semibold tracking-tight">Provl</span>
         </Link>
