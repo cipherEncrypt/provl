@@ -1,197 +1,166 @@
 # Provl
 
-**Provl is a consumer agent that does a web task you describe in plain English, then returns proof that it actually did it, a pass or fail verdict plus a replay of the real browser run.**
+Provl is a consumer web agent with a proof layer: you describe a task in plain English, it runs in **real Chrome** through [Kane CLI](https://www.testmuai.com/kane-cli/), and you get back **DONE** or **NOT DONE**, evidence fields, a replay link, and a shareable proof page. Agents often say “done” with no evidence. Provl does not claim success unless Kane’s `run_end` verdict backs it.
 
-Not "done" written in prose. Evidence you can see.
+**Submission repo:** replace with your public clone URL before judging.
+
+```bash
+git clone https://github.com/YOUR_ORG/provl.git provl
+cd provl
+```
 
 ---
 
-## Quick start for judges
-
-Follow these steps on a clean machine from clone to a working run. No guesswork.
+## Quick start (judges)
 
 ### Prerequisites
 
-- **Node.js 18+** (`node -v`)
-- **Google Chrome** installed (Kane drives local Chrome)
-- A free **[TestMu AI](https://www.testmuai.com)** account with Kane credits ([claim credits](https://www.testmuai.com/kane-cli/) if prompted)
+- **Node.js 18+**
+- **Google Chrome** (Kane drives local Chrome)
+- Free **[TestMu AI](https://www.testmuai.com)** account with Kane credits
 
-### 1. Clone and install
+### 1. Install
 
 ```bash
-git clone <your-repo-url> provl
-cd provl
 npm install
 ```
 
-### 2. Sign in to Kane (one time per machine)
-
-Provl runs Kane through `npx` - no global install required.
+### 2. Sign in to Kane (recommended)
 
 ```bash
 npx @testmuai/kane-cli login --oauth
-```
-
-Complete sign-in in the browser. Confirm:
-
-```bash
 npx @testmuai/kane-cli whoami
 npx @testmuai/kane-cli balance
 ```
 
-You should see **Authenticated** and available credits. The first `npx` invocation may take ~30s while it downloads `@testmuai/kane-cli`.
+The first `npx` call may take ~30s while Kane downloads. Provl shells out to `npx @testmuai/kane-cli` on each run.
 
-### 3. Environment (optional)
+### 3. Environment
 
 ```bash
 cp .env.example .env
 ```
 
-Leave `.env` empty if you use OAuth above. Only set `LT_USERNAME` / `LT_ACCESS_KEY` if you prefer API keys instead of OAuth.
+| Variable | Required? | Purpose |
+|----------|-----------|---------|
+| `PROVL_ENC_KEY` | For **Connect** + monitor sign-in secrets | 32+ char secret; encrypts stored Kane keys and monitor passwords at rest |
+| `MONGODB_URI` | Optional | Atlas connection for run history and monitors when reachable; falls back to `.provl/` files |
+| `CRON_SECRET` | Optional | Protects `POST /api/cron/run-watches` when scheduled monitors run on Vercel |
+| `RESEND_API_KEY` | Optional | Automatic email when a monitor returns NOT DONE |
+| `RESEND_FROM` | Optional | Sender for Resend (use a verified domain in production) |
+| `RESEND_ALERT_OVERRIDE` | Optional | Sandbox only: deliver alerts to your Resend signup email |
+| `PROVL_PUBLIC_URL` | Optional | Absolute proof links (emails, MCP); defaults to `http://localhost:3000` |
+| `LT_USERNAME` / `LT_ACCESS_KEY` | Optional | Rare; OAuth is the default path |
 
-**Monitors** work with zero extra env: failures appear on `/dashboard/monitors` and you can **Email this proof** via `mailto:`. Add `RESEND_API_KEY` only if you want automatic failure emails.
+Minimal local demo: **Kane OAuth only**, empty or nearly empty `.env`.
 
-### 4. Start Provl
+### 4. Start the app
 
 ```bash
 npm run dev
 ```
 
-Open **http://localhost:3000** for the landing page, then **http://localhost:3000/app** for the task app (use another port with `PORT=3001 npm run dev` if 3000 is busy).
+Open **http://localhost:3000** → **Run** at **http://localhost:3000/dashboard** (`/app` redirects here).
 
-Keep this terminal running. The **cancel subscription** demo talks to this same server.
+### 5. Demo presets (Run tab)
 
-### 5. Try the two demo presets (one click each)
+Each preset takes about **1–3 minutes**.
 
-On **/app**, use the two preset buttons. **Each run takes about 1-3 minutes** - wait for the loading state to finish.
+| Preset | Expected verdict | What it does |
+|--------|------------------|--------------|
+| **Demo: cancel subscription** | **DONE** | Local sandbox `/demo/subscription`; cancels and verifies canceled state |
+| **Demo: honest NOT DONE** | **NOT DONE** | [the-internet login](https://the-internet.herokuapp.com/login); looks for a button that does not exist; honest stop, no false DONE |
 
-| Button | Expected card | What Kane does |
-|--------|---------------|----------------|
-| **Demo: cancel subscription** | **DONE** | Opens the local sandbox at `/demo/subscription`, clicks cancel, confirms, and **verifies** “Subscription canceled” is shown. |
-| **Demo: honest NOT DONE** | **NOT DONE** | Opens [the-internet login](https://the-internet.herokuapp.com/login) and **verifies** a “Sign up with Google” button exists (it does not). Provl reports where it stopped - **no false success**, **one Kane attempt** (no credit-burning retries on honest failures). |
+Results include **replay** and **proof** links.
 
-Each finished run shows a **replay link** (Test Manager) and a **shareable proof page** link.
+---
 
-### 6. What Kane verifies (one line)
+## Connect your Kane account
 
-**Kane drives real Chrome on your objective and returns pass or fail only when the page state matches what you asked it to verify** - Provl displays that verdict, the replay URL, and readable proof fields from Kane’s `run_end` event.
+1. Open **/connect** or **Dashboard → Account**.
+2. **Connect** with TestMu username + access key, **or** choose **Use machine login** (same OAuth as step 2 above).
+3. Credits and session spend appear on **Account** when connected.
 
-### Optional: CLI acceptance (no UI)
+---
 
-With `npm run dev` still up:
+## Monitors
+
+**Dashboard → Monitors:** save a task and schedule (hourly/daily). **Run now** works without waiting for cron.
+
+- Pass/fail shows **in the list** (no email setup required).
+- **Email this proof** uses your mail app (`mailto:`).
+- Optional **Resend** for automatic failure email (`RESEND_*` in `.env`).
+- Optional cron: set `CRON_SECRET`, deploy with `vercel.json`, or `npm run cron:dev` locally.
+
+---
+
+## MCP (other agents)
+
+Provl exposes one MCP tool, **`verify_web_task`**, on stdio (same `executeRunAndSaveProof` path as the web app).
 
 ```bash
-npm run phase-a:acceptance
+npm run mcp
+npm run mcp:prove   # terminal smoke (Sauce Demo)
+```
+
+Copy **`mcp.json.example`** → **`.cursor/mcp.json`**. Full steps: **[docs/mcp.md](docs/mcp.md)**.
+
+---
+
+## Production check
+
+```bash
+npm run build
+npm start
 ```
 
 ---
 
-## 1. What we are building
-
-People now ask AI agents to do things on the web for them: cancel a subscription, check if an order shipped, fill a form, confirm a booking. The agent replies "done." But there is no proof it really happened, so you cannot trust it. Every consumer browser agent has this same gap.
-
-Provl closes that gap. You give it a task in plain words. It performs the task in a **real browser** using Kane CLI, and because Kane returns a verdict backed by evidence, Provl hands you back a **result card**: done or not done, proof fields from the run, and a replay link of the actual run.
-
-If Provl cannot finish the task, it tells you exactly where it stopped. It never claims a success it cannot prove. That honesty is the point of the product.
-
-**In one sentence:** a user types a task like "cancel my subscription on this site," Provl runs it in a real browser through Kane, and returns a card showing done or not done, proof fields, and a replay link.
-
----
-
-## 2. Who it is for
-
-Anyone with a web chore. Non-technical. The user types a task and gets a result card with proof. No code, no selectors, no setup beyond typing what they want.
-
----
-
-## 3. Why Kane CLI is central
-
-Kane is the engine of Provl, not a feature bolted on the side. Kane is a browser agent that drives a real Chrome browser from a plain-English goal and returns a pass or fail backed by real evidence. Provl is the product wrapped around that engine.
-
-- Provl calls Kane in **agent mode** via `npx @testmuai/kane-cli run "<task>" --agent --headless` (and `--url` when the user gives a site).
-- `--agent` streams **NDJSON**, one JSON event per line. The final `run_end` event carries the verdict and replay link. Provl parses that event.
-- **Exit code 0 and `run_end.status: "passed"` mean done.** Anything else is not done.
-- Provl **does not retry** honest `run_end` failures (e.g. impossible assertions). It only retries on timeout or missing `run_end`.
-
-Docs:
-
-- https://www.testmuai.com/support/docs/kane-cli-introduction/
-- https://www.testmuai.com/kane-cli/agents.md
-
----
-
-## 4. The two phases
-
-### Phase A - The Build phase (the engine)
-
-Backend: run Kane, parse NDJSON, honest stop, selective retry. See `lib/kane/` and `npm run phase-a:acceptance`.
-
-### Phase B - The Live phase (what the user sees)
-
-Next.js UI at `/`: input, loading state, result card, shareable `/proof/[id]`.
-
----
-
-## 5. Scope
-
-### Shipped in v1
-
-- Kane agent runs via `npx`, NDJSON parser, honest stop, selective retry
-- Home UI, result card, shareable proof pages
-- Local cancel sandbox at `/demo/subscription`
-- One-click judge demo presets (DONE + honest NOT DONE)
-- **Monitors** (`/dashboard/monitors`): scheduled re-runs with **in-app** pass/fail on each row and a latest proof link. No email setup required. Use **Email this proof** (`mailto:`) on the proof page or after a failure to share the task, verdict, and link from your own mail app. **Automatic email is optional:** set `RESEND_API_KEY` (and `RESEND_FROM`) if you want failures emailed for you; without a key, runs still complete and failures show in the dashboard. Resend’s sandbox sender (`onboarding@resend.dev`) can only deliver to your Resend signup address until you [verify a domain](https://resend.com/domains); use `RESEND_ALERT_OVERRIDE` locally or a verified `RESEND_FROM` in production.
-
-### Won't have (v1)
-
-- Real user accounts, payments, mobile, or storing anyone's real credentials
-- Inline screenshots from `.evidence` packs (replay link + `final_state` only)
-
----
-
-## 6. Tech stack
-
-- **Frontend:** Next.js + Tailwind
-- **Backend:** `POST /api/kane/run` shells out to `npx @testmuai/kane-cli`
-- **Storage:** `.provl/runs/*.json` for shareable proof pages
-
----
-
-## MCP proof layer (optional)
-
-Other agents (Cursor, Claude Desktop) can call Provl over **stdio MCP** with one tool: **`verify_web_task`**. It uses the same `executeRunAndSaveProof` path as the web app. No Next.js server required for the tool to run; run `npm run dev` if you want to open `proofUrl` in the browser.
+## Development commands
 
 ```bash
-npm run mcp          # stdio MCP server
-npm run mcp:prove    # terminal MCP client + Sauce Demo smoke
-```
-
-Setup: copy `mcp.json.example` to `.cursor/mcp.json`, or see **[docs/mcp.md](docs/mcp.md)** for Cursor + Claude Desktop JSON. Requires `npx @testmuai/kane-cli login --oauth` on the machine.
-
-## 7. Development commands
-
-```bash
-npm run dev                    # UI + API
-npm run build                  # production build check
-npm run mcp                    # MCP server (stdio)
-npm run kane:run -- "<task>" --url <url>   # CLI run with retry loop
-npm run phase-a:parse-fixtures   # parser tests against artifacts/
-npm run phase-a:retry-policy     # honest-fail must not retry
-npm run phase-a:acceptance       # cancel flow on local demo (dev server required)
+npm run dev
+npm run build
+npm run kane:run -- "<task>" --url <url>
+npm run phase-a:parse-fixtures
+npm run phase-a:retry-policy
+npm run phase-a:acceptance   # needs dev server
+npm run mcp
 ```
 
 ---
 
-## 8. Demo and submission
+## How Kane fits in
 
-- **Video:** preset **DONE**, then preset **NOT DONE** (~3-5 minutes including wait time).
-- **Repo:** public GitHub, this README, TestMu Kane login for judges (or document fallback recording).
-- **Deadline:** Nov 26.
+- `npx @testmuai/kane-cli run "<task>" --agent --headless` (+ `--url` when given).
+- Agent mode streams **NDJSON**; Provl parses `run_end` for verdict and replay.
+- **Honest NOT DONE** is not retried; retries are only for timeout / missing `run_end` (see `lib/kane/retryPolicy.ts`).
+
+Docs: [Kane CLI](https://www.testmuai.com/support/docs/kane-cli-introduction/) · [agents.md](https://www.testmuai.com/kane-cli/agents.md)
 
 ---
 
-## 9. Project rules (for contributors)
+## What's next (roadmap)
 
-- Never hardcode secrets; use `.env` / `.env.example`.
-- Build the parser from real Kane NDJSON, not assumptions.
-- The Live phase only shows what the API returned from Kane.
+- Mid-run credential prompt (Kane agent mode does not support dynamic pause/resume today)
+- Cross-device history via hosted DB (Mongo/Atlas) as the default store
+- Domain-verified email alerts (Resend production senders)
+- HTTP / Streamable MCP transport for remote agents
+- Per-user MCP auth (API keys tied to Kane accounts)
+
+---
+
+## Submission demo video (suggested)
+
+1. Preset **DONE** (cancel subscription).
+2. Preset **NOT DONE** (honest failure).
+3. Optional: **Monitors → Run now** or MCP `verify_web_task`.
+
+**Deadline:** Nov 26.
+
+---
+
+## Security
+
+- Never commit `.env`, `.provl/`, or local `mcp.json` / `.cursor/mcp.json`.
+- Parser and UI are built from real Kane NDJSON, not guessed shapes.

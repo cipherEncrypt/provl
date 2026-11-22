@@ -2,7 +2,12 @@ node_modules/
 .next/
 .env
 .env.local
+.env.*.local
 .DS_Store
 *.log
 .testmuai/
 .provl/
+
+# Local MCP client config (use mcp.json.example in repo)
+mcp.json
+.cursor/mcp.json
