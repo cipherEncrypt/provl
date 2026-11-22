@@ -1,0 +1,22 @@
+# Optional Render Blueprint: Dashboard → New → Blueprint → repo with this file.
+services:
+  - type: web
+    name: provl
+    runtime: node
+    plan: free
+    repo: https://github.com/cipherEncrypt/provl
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: PROVL_ENC_KEY
+        sync: false
+      - key: PROVL_PUBLIC_URL
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: CRON_SECRET
+        sync: false

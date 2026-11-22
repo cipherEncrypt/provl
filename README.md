@@ -83,6 +83,14 @@ Open http://localhost:3000.
 
 > Runs take about 1–3 minutes each — that's a real browser doing real work.
 
+### Deploy on Render or Vercel (optional)
+
+**Render (free):** [New Web Service](https://dashboard.render.com/) → GitHub `cipherEncrypt/provl`, **Build** `npm install && npm run build`, **Start** `npm run start`, **Free** instance. Set **`NODE_VERSION=20`**, **`PROVL_ENC_KEY`**, and **`PROVL_PUBLIC_URL=https://YOUR-SERVICE.onrender.com`**. Full checklist: **[docs/render.md](docs/render.md)**.
+
+**Vercel:** [vercel.com/new](https://vercel.com/new) — **[docs/vercel.md](docs/vercel.md)**.
+
+**Kane task runs do not work on either host** (no Chrome); use the live URL for UI and run tasks locally.
+
 ---
 
 ## Try it (demo presets)

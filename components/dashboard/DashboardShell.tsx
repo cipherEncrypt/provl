@@ -7,6 +7,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ProvlMark } from "../ProvlLogo";
 import { DashboardCreditsPill } from "./DashboardCreditsPill";
 import { useDashboardGate } from "./useDashboardGate";
+import { CloudHostingNotice } from "./CloudHostingNotice";
 
 const NAV = [
   { href: "/dashboard", label: "Run", exact: true },
@@ -35,9 +36,13 @@ const PAGE_HINTS: Record<string, string> = {
 
 type DashboardShellProps = {
   children: ReactNode;
+  hostedPlatform?: "vercel" | "render" | null;
 };
 
-export function DashboardShell({ children }: DashboardShellProps) {
+export function DashboardShell({
+  children,
+  hostedPlatform = null,
+}: DashboardShellProps) {
   const pathname = usePathname();
   const { ready, status, creditsLoading, refreshBalance, signOut } =
     useDashboardGate();
@@ -220,6 +225,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
         </header>
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto px-4 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
+          {hostedPlatform ? (
+            <div className="mx-auto mb-6 w-full max-w-[40rem]">
+              <CloudHostingNotice platform={hostedPlatform} />
+            </div>
+          ) : null}
           {children}
         </main>
       </div>
