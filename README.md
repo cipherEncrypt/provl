@@ -1,9 +1,7 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.png">
-  <img src="docs/logo-light.png" alt="Provl logo — geometric P with proof check and Provl wordmark" width="280">
-</picture>
+<img src="docs/logo-light.png#gh-light-mode-only" alt="Provl logo — geometric P with proof check and Provl wordmark" width="280">
+<img src="docs/logo-dark.png#gh-dark-mode-only" alt="Provl logo — geometric P with proof check and Provl wordmark" width="280">
 
 <br />
 
