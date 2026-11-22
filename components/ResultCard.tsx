@@ -11,7 +11,7 @@ type ResultCardProps = {
   loginSecretsHint?: boolean;
 };
 
-/** Step + reason only — never re-print the top summary. */
+/** Step + reason only; never re-print the top summary. */
 function honestStopDetail(stop: HonestStop): string | null {
   const lines: string[] = [];
   if (stop.failedStepRemark) {

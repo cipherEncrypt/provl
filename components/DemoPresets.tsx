@@ -39,7 +39,7 @@ export function DemoPresets({ disabled, onRunPreset }: DemoPresetsProps) {
         ))}
       </div>
       <p className="max-w-sm text-center text-xs leading-relaxed text-steel-soft">
-        Each run uses a real Chrome session and takes 1–3 minutes.
+        Each run uses a real Chrome session and takes 1-3 minutes.
       </p>
     </div>
   );

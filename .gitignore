@@ -10,4 +10,12 @@ node_modules/
 
 # Local MCP client config (use mcp.json.example in repo)
 mcp.json
-.cursor/mcp.json
+.cursor/
+
+# Deploy / IDE
+.vercel/
+
+# Accidental credential files
+credentials.json
+*.pem
+*.p12

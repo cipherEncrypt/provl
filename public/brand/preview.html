@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Provl logo concepts</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        color: #0a0a0a;
+        background: #f5f5f4;
+      }
+      h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.25rem;
+      }
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #525252;
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 56rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem;
+      }
+      .grid {
+        display: grid;
+        gap: 1.25rem;
+        margin-top: 2rem;
+      }
+      .card {
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .card-head {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #eee;
+      }
+      .card-head strong {
+        display: block;
+        font-size: 0.9375rem;
+        margin-bottom: 0.25rem;
+      }
+      .swatches {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .swatch {
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-start;
+        min-height: 10rem;
+      }
+      .swatch.light {
+        background: #ffffff;
+      }
+      .swatch.dark {
+        background: #0a0a0a;
+      }
+      .swatch span {
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.55;
+      }
+      .swatch.dark span {
+        color: #fff;
+      }
+      img {
+        height: 32px;
+        width: auto;
+        image-rendering: crisp-edges;
+      }
+      .wordmark {
+        height: 32px;
+      }
+      .pick {
+        margin-top: 2.5rem;
+        padding: 1.25rem;
+        border-radius: 12px;
+        border: 1px solid #d4d4d4;
+        background: #fff;
+      }
+      .pick h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Provl logo system</h1>
+      <p>
+        Grayscale only. Concept A (P + proof check) is the recommended default for
+        product UI, favicon, and share assets.
+      </p>
+
+      <div class="pick">
+        <h2>Recommended: Concept A</h2>
+        <p>
+          Ownable geometric “P” with a verdict check crossing the bowl. Reads as
+          proof at 16–32px without looking like a generic swoosh or AI badge.
+        </p>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <div class="card-head">
+            <strong>Concept A: P + check</strong>
+            <p>Wordmark + standalone mark. Files: <code>provl-*-a-*.svg</code></p>
+          </div>
+          <div class="swatches">
+            <div class="swatch light">
+              <span>White background</span>
+              <img class="wordmark" src="provl-wordmark-a-dark.svg" alt="Provl wordmark" />
+              <img src="provl-mark-a-dark.svg" alt="Provl mark" />
+            </div>
+            <div class="swatch dark">
+              <span>Black background</span>
+              <img class="wordmark" src="provl-wordmark-a-light.svg" alt="Provl wordmark" />
+              <img src="provl-mark-a-light.svg" alt="Provl mark" />
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <strong>Concept B: Verdict seal</strong>
+            <p>Circle + check. Files: <code>provl-*-b-*.svg</code></p>
+          </div>
+          <div class="swatches">
+            <div class="swatch light">
+              <span>White background</span>
+              <img class="wordmark" src="provl-wordmark-b-dark.svg" alt="Provl wordmark B" />
+              <img src="provl-mark-b-dark.svg" alt="Provl mark B" />
+            </div>
+            <div class="swatch dark">
+              <span>Black background</span>
+              <img src="provl-mark-b-light.svg" alt="Provl mark B light" />
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <strong>Concept C: Proof bracket</strong>
+            <p>Open frame + check (evidence / pass). Files: <code>provl-*-c-*.svg</code></p>
+          </div>
+          <div class="swatches">
+            <div class="swatch light">
+              <span>White background</span>
+              <img class="wordmark" src="provl-wordmark-c-dark.svg" alt="Provl wordmark C" />
+              <img src="provl-mark-c-dark.svg" alt="Provl mark C" />
+            </div>
+            <div class="swatch dark">
+              <span>Black background</span>
+              <img src="provl-mark-c-light.svg" alt="Provl mark C light" />
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

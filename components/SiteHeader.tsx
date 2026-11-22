@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ProvlMark } from "./ProvlLogo";
+
 type SiteHeaderProps = {
   /** Workbench chrome: wordmark + How it works only */
   variant?: "default" | "workbench";
@@ -19,14 +21,7 @@ export function SiteHeader({ variant = "default" }: SiteHeaderProps) {
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-ink text-white"
           aria-hidden="true"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path
-              d="M2 7h10M7 2v10"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="square"
-            />
-          </svg>
+          <ProvlMark onDark className="h-[18px] w-[18px]" />
         </span>
         <span className="truncate text-[17px] font-semibold tracking-tight">
           Provl

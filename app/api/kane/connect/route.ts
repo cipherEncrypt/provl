@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "Server is missing PROVL_ENC_KEY — cannot store credentials safely.",
+          "Server is missing PROVL_ENC_KEY; cannot store credentials safely.",
       },
       { status: 503 },
     );

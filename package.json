@@ -16,7 +16,8 @@
     "phase-a:acceptance": "tsx scripts/acceptance-cancel.ts",
     "cron:dev": "tsx scripts/dev-cron.ts",
     "mcp": "tsx mcp/server.ts",
-    "mcp:prove": "tsx scripts/mcp-prove-client.ts"
+    "mcp:prove": "tsx scripts/mcp-prove-client.ts",
+    "prepush:check": "sh scripts/verify-safe-to-push.sh"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",

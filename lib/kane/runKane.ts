@@ -37,7 +37,7 @@ export function runKane(options: RunKaneOptions): Promise<KaneProcessResult> {
       options.basicAuth.accessKey,
     );
   }
-  // else: no auth flags — Kane CLI uses this machine's ~/.testmuai profile (demo fallback).
+  // else: no auth flags; Kane CLI uses this machine's ~/.testmuai profile (demo fallback).
 
   const variablesJson = options.variables
     ? buildKaneVariablesArg(options.variables)

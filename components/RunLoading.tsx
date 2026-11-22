@@ -10,7 +10,7 @@ export function RunLoading() {
         aria-hidden="true"
       />
       <p className="max-w-sm text-lg font-semibold leading-snug tracking-tight text-ink">
-        Running in a real browser… this takes about 1–3 minutes. Keep this tab
+        Running in a real browser… this takes about 1-3 minutes. Keep this tab
         open.
       </p>
     </div>
