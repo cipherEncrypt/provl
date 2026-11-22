@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="docs/logo.png" alt="Provl logo — geometric P with proof check and Provl wordmark" width="280" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.png">
+  <img src="docs/logo-light.png" alt="Provl logo — geometric P with proof check and Provl wordmark" width="280">
+</picture>
 
 <br />
 
@@ -12,7 +15,7 @@
 
 <br />
 
-<img src="docs/proof.png" alt="Provl shared proof page with a DONE verdict, task summary, proof fields, and a Kane CLI replay link" width="900" style="border-radius: 12px;" />
+<img src="docs/banner.png" alt="Provl landing page: Get proof it was actually done — hero with Open app and Watch the demo buttons" width="900" style="border-radius: 12px;" />
 
 </div>
 
