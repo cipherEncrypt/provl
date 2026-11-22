@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "provl": {
+      "type": "stdio",
+      "command": "npm",
+      "args": ["run", "mcp"],
+      "env": {
+        "PROVL_PUBLIC_URL": "http://localhost:3000"
+      },
+      "envFile": "${workspaceFolder}/.env"
+    }
+  }
+}

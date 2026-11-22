@@ -157,11 +157,23 @@ Next.js UI at `/`: input, loading state, result card, shareable `/proof/[id]`.
 
 ---
 
+## MCP proof layer (optional)
+
+Other agents (Cursor, Claude Desktop) can call Provl over **stdio MCP** with one tool: **`verify_web_task`**. It uses the same `executeRunAndSaveProof` path as the web app. No Next.js server required for the tool to run; run `npm run dev` if you want to open `proofUrl` in the browser.
+
+```bash
+npm run mcp          # stdio MCP server
+npm run mcp:prove    # terminal MCP client + Sauce Demo smoke
+```
+
+Setup: copy `mcp.json.example` to `.cursor/mcp.json`, or see **[docs/mcp.md](docs/mcp.md)** for Cursor + Claude Desktop JSON. Requires `npx @testmuai/kane-cli login --oauth` on the machine.
+
 ## 7. Development commands
 
 ```bash
 npm run dev                    # UI + API
 npm run build                  # production build check
+npm run mcp                    # MCP server (stdio)
 npm run kane:run -- "<task>" --url <url>   # CLI run with retry loop
 npm run phase-a:parse-fixtures   # parser tests against artifacts/
 npm run phase-a:retry-policy     # honest-fail must not retry
