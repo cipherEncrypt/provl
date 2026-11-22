@@ -67,6 +67,9 @@ const GET_STARTED = [
 const KANE_DOCS =
   "https://www.testmuai.com/support/docs/kane-cli-introduction/";
 
+const MCP_SETUP_GUIDE =
+  "https://github.com/cipherEncrypt/provl/blob/main/docs/mcp.md";
+
 export function LandingPage() {
   return (
     <div className="flex min-h-dvh flex-col overflow-x-hidden">
@@ -196,6 +199,20 @@ export function LandingPage() {
                 <p className="mt-2 text-sm leading-relaxed text-steel">
                   {item.body}
                 </p>
+                {item.title === "MCP server" ? (
+                  <p className="mt-3 text-sm leading-relaxed text-steel">
+                    Add Provl to Claude Desktop or Cursor as an MCP tool —{" "}
+                    <a
+                      href={MCP_SETUP_GUIDE}
+                      className="font-medium text-ink underline decoration-steel-line underline-offset-2 hover:decoration-ink"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      see the setup guide
+                    </a>
+                    .
+                  </p>
+                ) : null}
               </article>
             ))}
           </div>
