@@ -15,11 +15,11 @@ import {
   RunSecretsEditor,
   type SecretRow,
 } from "../RunSecretsEditor";
+import { DashboardListSkeleton } from "./DashboardSkeletons";
 import {
   DashboardEmpty,
   DashboardError,
   DashboardIntro,
-  DashboardLoading,
 } from "./DashboardStates";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
@@ -224,13 +224,7 @@ export function DashboardMonitorsView() {
     }
   }
 
-  if (watches === null) {
-    return (
-      <DashboardViewColumn>
-        <DashboardLoading label="Loading monitors…" />
-      </DashboardViewColumn>
-    );
-  }
+  const watchesLoading = watches === null;
 
   return (
     <DashboardViewColumn>
@@ -352,7 +346,9 @@ export function DashboardMonitorsView() {
         </div>
       )}
 
-      {!listLoadError && watches.length === 0 ? (
+      {watchesLoading ? <DashboardListSkeleton rows={3} /> : null}
+
+      {!watchesLoading && !listLoadError && watches && watches.length === 0 ? (
         <DashboardEmpty>
           No monitors yet. Save one above, then tap{" "}
           <strong className="font-medium text-ink">Run now</strong> without waiting
@@ -360,7 +356,7 @@ export function DashboardMonitorsView() {
         </DashboardEmpty>
       ) : null}
 
-      {watches.length > 0 ? (
+      {!watchesLoading && watches && watches.length > 0 ? (
         <ul className="divide-y divide-steel-line rounded-card border border-steel-line bg-paper shadow-soft">
           {watches.map((watch) => {
             const when = watch.lastRunAt

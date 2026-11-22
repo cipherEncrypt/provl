@@ -7,6 +7,17 @@ import { useRouter } from "next/navigation";
 import type { KaneAccountStatus } from "@/lib/api-types";
 import { LT_BILLING, LT_KEY_HELP } from "@/lib/kane/constants";
 
+import { AccountCardSkeleton } from "./dashboard/DashboardSkeletons";
+
+async function loadAccount(refreshBalance: boolean): Promise<KaneAccountStatus | null> {
+  const url = refreshBalance
+    ? "/api/kane/account?refreshBalance=1"
+    : "/api/kane/account";
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) return null;
+  return (await res.json()) as KaneAccountStatus;
+}
+
 type KaneAccountSummaryProps = {
   refreshNonce?: number;
   showSignOut?: boolean;
@@ -20,18 +31,35 @@ export function KaneAccountSummary({
   const [status, setStatus] = useState<KaneAccountStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [accountLoading, setAccountLoading] = useState(true);
+  const [creditsLoading, setCreditsLoading] = useState(false);
   const [accountError, setAccountError] = useState<string | null>(null);
 
-  const refreshAccount = useCallback(async () => {
+  const refreshBalance = useCallback(async () => {
+    if (!status?.connected) return;
+    setCreditsLoading(true);
+    try {
+      const data = await loadAccount(true);
+      if (data) setStatus(data);
+    } finally {
+      setCreditsLoading(false);
+    }
+  }, [status?.connected]);
+
+  const load = useCallback(async () => {
     setAccountError(null);
     try {
-      const res = await fetch("/api/kane/account", { cache: "no-store" });
-      if (!res.ok) {
+      const data = await loadAccount(false);
+      if (!data) {
         setAccountError("Could not load account status.");
         return;
       }
-      const data = (await res.json()) as KaneAccountStatus;
       setStatus(data);
+      if (data.connected) {
+        setCreditsLoading(true);
+        const fresh = await loadAccount(true);
+        if (fresh) setStatus(fresh);
+        setCreditsLoading(false);
+      }
     } catch {
       setAccountError("Could not reach the server.");
     } finally {
@@ -40,8 +68,14 @@ export function KaneAccountSummary({
   }, []);
 
   useEffect(() => {
-    void refreshAccount();
-  }, [refreshAccount, refreshNonce]);
+    void load();
+  }, [load, refreshNonce]);
+
+  useEffect(() => {
+    const onRefresh = () => void refreshBalance();
+    window.addEventListener("provl:account-refresh", onRefresh);
+    return () => window.removeEventListener("provl:account-refresh", onRefresh);
+  }, [refreshBalance]);
 
   async function handleDisconnect() {
     setLoading(true);
@@ -59,11 +93,7 @@ export function KaneAccountSummary({
   const demoMode = status?.demoMode ?? false;
 
   if (accountLoading) {
-    return (
-      <p className="text-sm text-steel" role="status">
-        Loading account…
-      </p>
-    );
+    return <AccountCardSkeleton />;
   }
 
   if (accountError) {
@@ -117,15 +147,19 @@ export function KaneAccountSummary({
         <div>
           <dt className="text-steel-soft">Available credits</dt>
           <dd className="font-medium tabular-nums text-ink">
-            {connected && status?.availableCredits != null
-              ? status.availableCredits.toLocaleString(undefined, {
-                  maximumFractionDigits: 2,
-                })
-              : connected
-                ? "-"
-                : demoMode
-                  ? "Uses local account"
-                  : "-"}
+            {creditsLoading && connected ? (
+              <span className="inline-block h-5 w-20 animate-pulse rounded bg-mist" />
+            ) : connected && status?.availableCredits != null ? (
+              status.availableCredits.toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })
+            ) : connected ? (
+              "-"
+            ) : demoMode ? (
+              "Uses local account"
+            ) : (
+              "-"
+            )}
           </dd>
         </div>
         <div>
@@ -138,7 +172,7 @@ export function KaneAccountSummary({
         </div>
       </dl>
 
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <a
           href={LT_BILLING}
           target="_blank"
@@ -147,6 +181,16 @@ export function KaneAccountSummary({
         >
           Top up credits
         </a>
+        {connected ? (
+          <button
+            type="button"
+            disabled={creditsLoading}
+            onClick={() => void refreshBalance()}
+            className="btn-secondary text-sm"
+          >
+            Refresh balance
+          </button>
+        ) : null}
         <a
           href={LT_KEY_HELP}
           target="_blank"

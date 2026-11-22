@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { DashboardListSkeleton } from "./DashboardSkeletons";
 import {
   DashboardEmpty,
   DashboardError,
   DashboardIntro,
-  DashboardLoading,
 } from "./DashboardStates";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
@@ -56,13 +56,7 @@ export function DashboardHistoryView() {
     };
   }, []);
 
-  if (runs === null) {
-    return (
-      <DashboardViewColumn>
-        <DashboardLoading label="Loading history…" />
-      </DashboardViewColumn>
-    );
-  }
+  const loading = runs === null;
 
   return (
     <DashboardViewColumn>
@@ -71,9 +65,13 @@ export function DashboardHistoryView() {
         proof page.
       </DashboardIntro>
 
-      {loadError ? <DashboardError message={loadError} /> : null}
+      {loading ? (
+        <DashboardListSkeleton rows={5} />
+      ) : null}
 
-      {!loadError && runs.length === 0 ? (
+      {!loading && loadError ? <DashboardError message={loadError} /> : null}
+
+      {!loading && !loadError && runs && runs.length === 0 ? (
         <DashboardEmpty>
           No runs yet.{" "}
           <Link
@@ -86,7 +84,7 @@ export function DashboardHistoryView() {
         </DashboardEmpty>
       ) : null}
 
-      {runs.length > 0 ? (
+      {!loading && runs && runs.length > 0 ? (
       <ul className="divide-y divide-steel-line rounded-card border border-steel-line bg-paper shadow-soft">
         {runs.map((run) => {
           const when = new Intl.DateTimeFormat(undefined, {

@@ -1,6 +1,7 @@
 import type { Collection, Filter } from "mongodb";
 
 import { getMongoDb } from "./mongoClient";
+import { HISTORY_LIST_LIMIT } from "./historyLimits";
 import type { RunHistoryInsert, RunHistoryItem, RunHistoryListScope } from "./historyTypes";
 
 const COLLECTION = "runs";
@@ -77,6 +78,7 @@ export async function listRunHistoryMongo(
     const docs = await coll
       .find(listFilter(scope))
       .sort({ createdAt: -1 })
+      .limit(HISTORY_LIST_LIMIT)
       .toArray();
 
     return docs.map((doc) => ({

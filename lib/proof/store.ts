@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { HISTORY_LIST_LIMIT } from "./historyLimits";
 import type { ProofRecord } from "./types";
 
 const RUNS_DIR = join(process.cwd(), ".provl", "runs");
@@ -77,5 +78,5 @@ export async function listProofsForSession(
     (a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
-  return items;
+  return items.slice(0, HISTORY_LIST_LIMIT);
 }

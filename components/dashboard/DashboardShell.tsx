@@ -39,7 +39,8 @@ type DashboardShellProps = {
 
 export function DashboardShell({ children }: DashboardShellProps) {
   const pathname = usePathname();
-  const { ready, status, refresh, signOut } = useDashboardGate();
+  const { ready, status, creditsLoading, refreshBalance, signOut } =
+    useDashboardGate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const title = TITLES[pathname] ?? "Dashboard";
@@ -162,7 +163,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
             </p>
           ) : null}
         </div>
-        <DashboardCreditsPill status={status} />
+        <DashboardCreditsPill
+          status={status}
+          creditsLoading={creditsLoading}
+          onRefreshCredits={() => void refreshBalance()}
+        />
       </header>
 
       {mobileOpen && (
@@ -207,7 +212,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
               <p className="mt-1 max-w-xl text-sm text-steel">{pageHint}</p>
             ) : null}
           </div>
-          <DashboardCreditsPill status={status} />
+          <DashboardCreditsPill
+            status={status}
+            creditsLoading={creditsLoading}
+            onRefreshCredits={() => void refreshBalance()}
+          />
         </header>
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto px-4 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">

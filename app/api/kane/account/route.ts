@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { runKaneBalance } from "@/lib/kane/balance";
+import {
+  getCachedBalance,
+  setCachedBalance,
+} from "@/lib/provl/balanceCache";
 import { isMachineDemoEnabled } from "@/lib/provl/demoSession";
 import {
   getKaneAccount,
@@ -8,10 +12,12 @@ import {
 } from "@/lib/provl/kaneAccountStore";
 import { ensureSessionId } from "@/lib/provl/session";
 
-export async function GET() {
+export async function GET(req: Request) {
   const sessionId = await ensureSessionId();
   const demoMode = await isMachineDemoEnabled();
   const account = await getKaneAccount(sessionId);
+  const refreshBalance =
+    new URL(req.url).searchParams.get("refreshBalance") === "1";
 
   if (!account) {
     return NextResponse.json({
@@ -25,14 +31,21 @@ export async function GET() {
   }
 
   let availableCredits = account.availableCredits;
-  try {
-    const fresh = await runKaneBalance(account.username, account.accessKey);
-    if (fresh.ok) {
-      availableCredits = fresh.availableCredits;
-      await refreshStoredBalance(sessionId, fresh.availableCredits);
+
+  const cached = !refreshBalance ? getCachedBalance(sessionId) : null;
+  if (cached != null) {
+    availableCredits = cached;
+  } else if (refreshBalance) {
+    try {
+      const fresh = await runKaneBalance(account.username, account.accessKey);
+      if (fresh.ok) {
+        availableCredits = fresh.availableCredits;
+        await refreshStoredBalance(sessionId, fresh.availableCredits);
+        setCachedBalance(sessionId, fresh.availableCredits);
+      }
+    } catch {
+      /* use last known balance */
     }
-  } catch {
-    /* use last known balance */
   }
 
   return NextResponse.json({
