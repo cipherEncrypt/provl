@@ -19,15 +19,23 @@ export function KaneAccountSummary({
   const router = useRouter();
   const [status, setStatus] = useState<KaneAccountStatus | null>(null);
   const [loading, setLoading] = useState(false);
+  const [accountLoading, setAccountLoading] = useState(true);
+  const [accountError, setAccountError] = useState<string | null>(null);
 
   const refreshAccount = useCallback(async () => {
+    setAccountError(null);
     try {
       const res = await fetch("/api/kane/account", { cache: "no-store" });
-      if (!res.ok) return;
+      if (!res.ok) {
+        setAccountError("Could not load account status.");
+        return;
+      }
       const data = (await res.json()) as KaneAccountStatus;
       setStatus(data);
     } catch {
-      /* ignore */
+      setAccountError("Could not reach the server.");
+    } finally {
+      setAccountLoading(false);
     }
   }, []);
 
@@ -50,8 +58,27 @@ export function KaneAccountSummary({
   const connected = status?.connected ?? false;
   const demoMode = status?.demoMode ?? false;
 
+  if (accountLoading) {
+    return (
+      <p className="text-sm text-steel" role="status">
+        Loading account…
+      </p>
+    );
+  }
+
+  if (accountError) {
+    return (
+      <p
+        className="rounded-card border border-steel-line bg-paper px-4 py-3 text-sm text-ink shadow-soft"
+        role="alert"
+      >
+        {accountError}
+      </p>
+    );
+  }
+
   return (
-    <section className="surface-card w-full text-left" aria-label="Account summary">
+    <section className="surface-card w-full min-w-0 text-left" aria-label="Account summary">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-steel-soft">Signed in as</p>
@@ -63,7 +90,7 @@ export function KaneAccountSummary({
               <span className="text-sm font-normal text-steel">(local Kane login)</span>
             </p>
           ) : (
-            <p className="mt-1 text-sm text-steel">—</p>
+            <p className="mt-1 text-sm text-steel">-</p>
           )}
         </div>
         {showSignOut && (
@@ -95,10 +122,10 @@ export function KaneAccountSummary({
                   maximumFractionDigits: 2,
                 })
               : connected
-                ? "—"
+                ? "-"
                 : demoMode
                   ? "Uses local account"
-                  : "—"}
+                  : "-"}
           </dd>
         </div>
         <div>

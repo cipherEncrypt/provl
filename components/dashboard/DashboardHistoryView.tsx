@@ -3,6 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import {
+  DashboardEmpty,
+  DashboardError,
+  DashboardIntro,
+  DashboardLoading,
+} from "./DashboardStates";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
 type HistoryRun = {
@@ -21,17 +27,28 @@ function truncateTask(task: string, max = 88): string {
 
 export function DashboardHistoryView() {
   const [runs, setRuns] = useState<HistoryRun[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      setLoadError(null);
       try {
         const res = await fetch("/api/provl/history", { cache: "no-store" });
-        if (!res.ok) return;
+        if (!res.ok) {
+          if (!cancelled) {
+            setRuns([]);
+            setLoadError("Could not load history. Try again in a moment.");
+          }
+          return;
+        }
         const data = (await res.json()) as { runs: HistoryRun[] };
         if (!cancelled) setRuns(data.runs);
       } catch {
-        if (!cancelled) setRuns([]);
+        if (!cancelled) {
+          setRuns([]);
+          setLoadError("Could not reach the server. Is npm run dev running?");
+        }
       }
     })();
     return () => {
@@ -42,30 +59,34 @@ export function DashboardHistoryView() {
   if (runs === null) {
     return (
       <DashboardViewColumn>
-        <p className="text-sm text-steel">Loading history…</p>
-      </DashboardViewColumn>
-    );
-  }
-
-  if (runs.length === 0) {
-    return (
-      <DashboardViewColumn>
-        <div className="surface-card text-sm text-steel">
-          No runs yet —{" "}
-          <Link
-            href="/dashboard"
-            className="font-medium text-ink underline-offset-2 hover:underline"
-          >
-            run your first task
-          </Link>
-          .
-        </div>
+        <DashboardLoading label="Loading history…" />
       </DashboardViewColumn>
     );
   }
 
   return (
     <DashboardViewColumn>
+      <DashboardIntro>
+        Past runs for this browser session. Open any row to view the shareable
+        proof page.
+      </DashboardIntro>
+
+      {loadError ? <DashboardError message={loadError} /> : null}
+
+      {!loadError && runs.length === 0 ? (
+        <DashboardEmpty>
+          No runs yet.{" "}
+          <Link
+            href="/dashboard"
+            className="font-medium text-ink underline-offset-2 hover:underline"
+          >
+            Run your first task
+          </Link>{" "}
+          on the Run tab.
+        </DashboardEmpty>
+      ) : null}
+
+      {runs.length > 0 ? (
       <ul className="divide-y divide-steel-line rounded-card border border-steel-line bg-paper shadow-soft">
         {runs.map((run) => {
           const when = new Intl.DateTimeFormat(undefined, {
@@ -77,7 +98,7 @@ export function DashboardHistoryView() {
               ? run.creditsConsumed.toLocaleString(undefined, {
                   maximumFractionDigits: 2,
                 })
-              : "—";
+              : "-";
 
           return (
             <li
@@ -112,6 +133,7 @@ export function DashboardHistoryView() {
           );
         })}
       </ul>
+      ) : null}
     </DashboardViewColumn>
   );
 }

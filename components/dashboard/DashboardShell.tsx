@@ -179,7 +179,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           <DashboardCreditsPill status={status} />
         </header>
 
-        <main className="flex-1 overflow-y-auto px-4 pb-14 pt-8 sm:px-4 sm:pt-10 lg:px-8 lg:pt-12">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto px-4 pb-[max(3.5rem,env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
           {children}
         </main>
       </div>

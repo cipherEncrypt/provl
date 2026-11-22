@@ -9,6 +9,7 @@ import { DemoPresets } from "../DemoPresets";
 import { ResultCard } from "../ResultCard";
 import { RunForm } from "../RunForm";
 import { RunLoading } from "../RunLoading";
+import { DashboardError } from "./DashboardStates";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
 export function DashboardRunView() {
@@ -67,10 +68,10 @@ export function DashboardRunView() {
     <DashboardViewColumn>
       <p className="text-sm leading-relaxed text-steel">
         Describe a web task in plain English. Provl runs it in real Chrome and
-        returns a verdict you can share.
+        returns a DONE or NOT DONE verdict you can share.
       </p>
 
-      <div id="run" className="mt-8 scroll-mt-8">
+      <div id="run" className="scroll-mt-8">
         <RunForm
           disabled={loading}
           task={task}
@@ -81,7 +82,7 @@ export function DashboardRunView() {
         />
       </div>
 
-      <div className="mt-8 w-full">
+      <div className="w-full min-w-0">
         <DemoPresets
           disabled={loading}
           onRunPreset={(t, u) => {
@@ -91,17 +92,10 @@ export function DashboardRunView() {
       </div>
 
       {(loading || error || result) && (
-        <div className="mt-8 w-full space-y-4">
+        <div className="w-full min-w-0 space-y-4">
           {loading && <RunLoading />}
 
-          {error && (
-            <p
-              className="rounded-card border border-steel-line bg-paper px-4 py-3 text-sm text-ink shadow-soft"
-              role="alert"
-            >
-              {error}
-            </p>
-          )}
+          {error ? <DashboardError message={error} /> : null}
 
           {result && !loading && (
             <ResultCard

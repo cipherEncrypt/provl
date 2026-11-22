@@ -15,7 +15,7 @@ export function DashboardCreditsPill({ status }: DashboardCreditsPillProps) {
       ? `${credits.toLocaleString(undefined, { maximumFractionDigits: 2 })} credits`
       : status?.demoMode
         ? "Local demo"
-        : "— credits";
+        : "- credits";
 
   return (
     <a

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { KaneAccountSummary } from "../KaneAccountSummary";
+import { DashboardIntro } from "./DashboardStates";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
 export function DashboardAccountView() {
@@ -16,6 +17,10 @@ export function DashboardAccountView() {
 
   return (
     <DashboardViewColumn>
+      <DashboardIntro>
+        Your Kane connection and credits for this session. Connect here to track
+        usage in the dashboard; or use machine OAuth without connecting.
+      </DashboardIntro>
       <KaneAccountSummary refreshNonce={refreshNonce} showSignOut={false} />
     </DashboardViewColumn>
   );

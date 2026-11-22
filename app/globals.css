@@ -40,7 +40,7 @@ body {
   touch-action: manipulation;
 }
 
-/* Soft white glow behind the hero — no wave lines */
+/* Soft white glow behind the hero (no wave lines) */
 .hero-glow {
   background-color: var(--paper);
   background-image: radial-gradient(
@@ -92,11 +92,11 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-btn bg-ink px-5 py-3 text-sm font-semibold text-white shadow-btn transition-[background-color,opacity,transform] duration-150 hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-steel-soft disabled:shadow-none;
+    @apply inline-flex min-h-11 items-center justify-center rounded-btn bg-ink px-5 py-3 text-sm font-semibold text-white shadow-btn transition-[background-color,opacity,transform] duration-150 hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-steel-soft disabled:shadow-none;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-btn border border-steel-line bg-paper px-4 py-2.5 text-sm font-medium text-ink shadow-pill transition-[background-color,border-color] duration-150 hover:border-steel-soft hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center rounded-btn border border-steel-line bg-paper px-4 py-2.5 text-sm font-medium text-ink shadow-pill transition-[background-color,border-color] duration-150 hover:border-steel-soft hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .surface-card {

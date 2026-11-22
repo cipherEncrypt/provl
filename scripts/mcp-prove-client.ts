@@ -52,7 +52,8 @@ async function main() {
 
   await client.close();
 
-  const textBlock = result.content?.find(
+  const blocks = Array.isArray(result.content) ? result.content : [];
+  const textBlock = blocks.find(
     (c): c is { type: "text"; text: string } =>
       typeof c === "object" && c !== null && "type" in c && c.type === "text",
   );

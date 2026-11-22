@@ -15,6 +15,12 @@ import {
   RunSecretsEditor,
   type SecretRow,
 } from "../RunSecretsEditor";
+import {
+  DashboardEmpty,
+  DashboardError,
+  DashboardIntro,
+  DashboardLoading,
+} from "./DashboardStates";
 import { DashboardViewColumn } from "./DashboardViewColumn";
 
 type WatchRow = {
@@ -61,6 +67,7 @@ function truncateTask(task: string, max = 72): string {
 
 export function DashboardMonitorsView() {
   const [watches, setWatches] = useState<WatchRow[] | null>(null);
+  const [listLoadError, setListLoadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [formTask, setFormTask] = useState(
     'Verify the subscription page shows "Cancel subscription" and is not already canceled.',
@@ -77,16 +84,19 @@ export function DashboardMonitorsView() {
   const [siteOrigin, setSiteOrigin] = useState("");
 
   const loadWatches = useCallback(async () => {
+    setListLoadError(null);
     try {
       const res = await fetch("/api/watches", { cache: "no-store" });
       if (!res.ok) {
         setWatches([]);
+        setListLoadError("Could not load monitors.");
         return;
       }
       const data = (await res.json()) as { watches: WatchRow[] };
       setWatches(data.watches);
     } catch {
       setWatches([]);
+      setListLoadError("Could not reach the server. Is npm run dev running?");
     }
   }, []);
 
@@ -217,30 +227,32 @@ export function DashboardMonitorsView() {
   if (watches === null) {
     return (
       <DashboardViewColumn>
-        <p className="text-sm text-steel">Loading monitors…</p>
+        <DashboardLoading label="Loading monitors…" />
       </DashboardViewColumn>
     );
   }
 
   return (
     <DashboardViewColumn>
-      <p className="text-sm leading-relaxed text-steel">
+      <DashboardIntro>
         Monitors re-run a saved task on a schedule and show pass or fail right in
         this list.
-      </p>
-      <p className="mt-3 rounded-card border border-steel-line bg-paper px-4 py-3 text-sm leading-relaxed text-steel">
+      </DashboardIntro>
+      <p className="rounded-card border border-steel-line bg-paper px-4 py-3 text-sm leading-relaxed text-steel">
         Failures show here instantly. Email this proof with one click, or add a
         Resend key for automatic emails.
       </p>
-      <p className="mt-3 rounded-card border border-steel-line bg-mist/80 px-4 py-3 text-sm text-steel">
+      <p className="rounded-card border border-steel-line bg-mist/80 px-4 py-3 text-sm text-steel">
         Describe what to check in plain English. If the site needs a sign-in,
         turn on &quot;This task needs me to sign in&quot; and enter your email
         and password below.
       </p>
 
+      {listLoadError ? <DashboardError message={listLoadError} /> : null}
+
       <form
         onSubmit={handleCreate}
-        className="surface-card mt-8 flex flex-col gap-4"
+        className="surface-card flex flex-col gap-4"
         autoComplete="off"
       >
         <h2 className="text-sm font-semibold text-ink">New monitor</h2>
@@ -322,14 +334,10 @@ export function DashboardMonitorsView() {
         </button>
       </form>
 
-      {error && (
-        <p className="mt-4 rounded-card border border-steel-line bg-paper px-4 py-3 text-sm text-ink" role="alert">
-          {error}
-        </p>
-      )}
+      {error ? <DashboardError message={error} /> : null}
       {runNotice && (
         <div
-          className="mt-4 rounded-card border border-steel-line bg-mist px-4 py-3 text-sm text-ink"
+          className="rounded-card border border-steel-line bg-mist px-4 py-3 text-sm text-ink"
           role="status"
         >
           <p>{runNotice}</p>
@@ -344,14 +352,16 @@ export function DashboardMonitorsView() {
         </div>
       )}
 
-      {watches.length === 0 ? (
-        <div className="surface-card mt-8 text-sm text-steel">
-          No monitors yet. Save one above, then use{" "}
-          <strong className="font-medium text-ink">Run now</strong> to demo without
-          waiting for the schedule.
-        </div>
-      ) : (
-        <ul className="mt-8 divide-y divide-steel-line rounded-card border border-steel-line bg-paper shadow-soft">
+      {!listLoadError && watches.length === 0 ? (
+        <DashboardEmpty>
+          No monitors yet. Save one above, then tap{" "}
+          <strong className="font-medium text-ink">Run now</strong> without waiting
+          for the schedule.
+        </DashboardEmpty>
+      ) : null}
+
+      {watches.length > 0 ? (
+        <ul className="divide-y divide-steel-line rounded-card border border-steel-line bg-paper shadow-soft">
           {watches.map((watch) => {
             const when = watch.lastRunAt
               ? new Intl.DateTimeFormat(undefined, {
@@ -459,7 +469,7 @@ export function DashboardMonitorsView() {
             );
           })}
         </ul>
-      )}
+      ) : null}
     </DashboardViewColumn>
   );
 }
