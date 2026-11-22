@@ -1,10 +1,20 @@
-# Provl
+<div align="center">
 
-**Tell Provl a web task in plain English. It does the task in a real browser and hands you proof it actually happened — a pass/fail verdict you can replay and share, verified by Kane CLI.**
+<img src="docs/logo.png" alt="Provl logo — geometric P with proof check and Provl wordmark" width="280" />
 
-Not "done" written in prose. Evidence you can see.
+<br />
 
-> Built for the Kane CLI Online Hackathon (TestMu AI).
+**Your AI agent says 'done.' Provl makes it prove it.**
+
+<br />
+
+[Demo video](YOUTUBE_URL) · [Website](https://provl.onrender.com/) · [Live proof page](PROOF_URL) · [Quick start](#quick-start)
+
+<br />
+
+<img src="docs/proof.png" alt="Provl shared proof page with a DONE verdict, task summary, proof fields, and a Kane CLI replay link" width="900" style="border-radius: 12px;" />
+
+</div>
 
 ---
 
