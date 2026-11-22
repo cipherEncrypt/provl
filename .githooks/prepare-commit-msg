@@ -1,8 +1,1 @@
-#!/usr/bin/env sh
-# Optional: git config core.hooksPath .githooks
-# Removes Cursor IDE co-author trailer so only your identity appears on GitHub.
-MSG_FILE=$1
-case "$(uname -s)" in
-  Darwin) sed -i '' '/^Co-authored-by: Cursor <cursoragent@cursor.com>/d' "$MSG_FILE" ;;
-  *) sed -i '/^Co-authored-by: Cursor <cursoragent@cursor.com>/d' "$MSG_FILE" ;;
-esac
+
